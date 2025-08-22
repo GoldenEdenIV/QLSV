@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1040</width>
+    <height>833</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTabWidget" name="TabWidget">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>80</y>
+      <width>1000</width>
+      <height>701</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>1000</width>
+      <height>800</height>
+     </size>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="tabPosition">
+     <enum>QTabWidget::TabPosition::North</enum>
+    </property>
+    <property name="currentIndex">
+     <number>2</number>
+    </property>
+    <property name="elideMode">
+     <enum>Qt::TextElideMode::ElideNone</enum>
+    </property>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>Lớp SV</string>
+     </attribute>
+     <widget class="QPushButton" name="listClassesButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>240</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Cập nhật</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="deleteClassButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>170</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Xóa lớp SV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="editClassButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>100</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Sửa lớp SV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="addClassButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>30</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Thêm lớp SV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="listSortedStudentsButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>310</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Sắp xếp</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lopSVSearchLineEdit">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>30</y>
+        <width>401</width>
+        <height>41</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="addStudentsButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>380</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Thêm sinh viên</string>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="lopSVTableView">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>100</y>
+        <width>801</width>
+        <height>531</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>Môn học</string>
+     </attribute>
+     <widget class="QPushButton" name="addSubjectButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>30</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Thêm môn học</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="editSubjectButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>100</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Sửa môn học</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="deleteSubjectButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>170</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Xóa môn học</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="listSubjectsButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>240</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Cập nhật DS</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="monHocSearchLineEdit">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>30</y>
+        <width>481</width>
+        <height>41</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="monHocTableView">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>100</y>
+        <width>801</width>
+        <height>531</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_3">
+     <attribute name="title">
+      <string>Sinh viên</string>
+     </attribute>
+     <widget class="QPushButton" name="listAllStudentsButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>30</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Xem DSSV</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="sinhVienSearchLineEdit">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>30</y>
+        <width>481</width>
+        <height>41</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="sinhVienTableView">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>100</y>
+        <width>801</width>
+        <height>531</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="editStudentButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>170</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Sửa SV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="deleteStudentButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>240</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Xoá SV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="addStudentButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>100</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Thêm SV</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_4">
+     <attribute name="title">
+      <string>Lớp tín chỉ</string>
+     </attribute>
+     <widget class="QPushButton" name="editCreditClassButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>100</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Sửa lớp TC</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="deleteCreditClassButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>170</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Xóa lớp TC</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="enterScoresButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>310</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Nhập điểm</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="addCreditClassButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>30</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Thêm lớp TC</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="registerStudentButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>240</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Đăng kí SV</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lopTCSearchLineEdit">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>30</y>
+        <width>481</width>
+        <height>41</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="listRegisteredStudentsButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>380</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Xem SV đăng kí</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="printScoresButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>450</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>In điểm</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="printAvgScoresButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>520</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>In điểm TB</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="printTotalScoresButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>590</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>In điểm tổng</string>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="lopTCTableView">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>100</y>
+        <width>801</width>
+        <height>531</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1041</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>30</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>QUẢN LÍ SINH VIÊN</string>
+    </property>
+    <property name="scaledContents">
+     <bool>false</bool>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignCenter</set>
+    </property>
+    <property name="margin">
+     <number>-3</number>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="readFileButton">
+    <property name="geometry">
+     <rect>
+      <x>940</x>
+      <y>0</y>
+      <width>91</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Đọc file</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="writeFileButton">
+    <property name="geometry">
+     <rect>
+      <x>940</x>
+      <y>50</y>
+      <width>91</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Ghi file</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionRead">
+   <property name="text">
+    <string>Read</string>
+   </property>
+  </action>
+  <action name="actionWrite">
+   <property name="text">
+    <string>Write</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

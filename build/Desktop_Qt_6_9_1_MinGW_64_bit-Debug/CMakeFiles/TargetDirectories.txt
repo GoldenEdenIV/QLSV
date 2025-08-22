@@ -1,0 +1,5 @@
+D:/QLSV/build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug/CMakeFiles/QLDSV_TC_GUI.dir
+D:/QLSV/build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug/CMakeFiles/edit_cache.dir
+D:/QLSV/build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug/CMakeFiles/rebuild_cache.dir
+D:/QLSV/build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug/CMakeFiles/QLDSV_TC_GUI_autogen_timestamp_deps.dir
+D:/QLSV/build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug/CMakeFiles/QLDSV_TC_GUI_autogen.dir
