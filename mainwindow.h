@@ -91,5 +91,6 @@ private:
     TreeMH DSMH = NULL;
     DSLopSV DSLSV;
     PTRSV FirstSV = NULL;
+    bool isShowingStudentList = false;
 };
 #endif // MAINWINDOW_H

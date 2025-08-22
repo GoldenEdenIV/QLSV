@@ -1042,10 +1042,7 @@ p = p->next;
 }
 return ss.str();
 }
-struct CustomPair {
-string masv;
-float diem;
-};
+
 string NhapDiem_LopTC(DSLopTC &DSLTC, TreeMH &DSMH, DSLopSV &DSLSV, string mamh, string nienkhoa, int hocky, int nhom, CustomPair diem_list[], int diem_size)
 {
 stringstream ss;

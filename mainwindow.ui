@@ -38,7 +38,7 @@
      <enum>QTabWidget::TabPosition::North</enum>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>1</number>
     </property>
     <property name="elideMode">
      <enum>Qt::TextElideMode::ElideNone</enum>
@@ -57,7 +57,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>Cập nhật</string>
+       <string>In danh sách</string>
       </property>
      </widget>
      <widget class="QPushButton" name="deleteClassButton">

@@ -218,7 +218,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        TabWidget->setCurrentIndex(2);
+        TabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -229,7 +229,7 @@ public:
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
         actionRead->setText(QCoreApplication::translate("MainWindow", "Read", nullptr));
         actionWrite->setText(QCoreApplication::translate("MainWindow", "Write", nullptr));
-        listClassesButton->setText(QCoreApplication::translate("MainWindow", "C\341\272\255p nh\341\272\255t", nullptr));
+        listClassesButton->setText(QCoreApplication::translate("MainWindow", "In danh s\303\241ch", nullptr));
         deleteClassButton->setText(QCoreApplication::translate("MainWindow", "X\303\263a l\341\273\233p SV", nullptr));
         editClassButton->setText(QCoreApplication::translate("MainWindow", "S\341\273\255a l\341\273\233p SV", nullptr));
         addClassButton->setText(QCoreApplication::translate("MainWindow", "Th\303\252m l\341\273\233p SV", nullptr));

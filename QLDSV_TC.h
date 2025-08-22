@@ -98,6 +98,11 @@ struct DSLopTC
     LopTC *nodes[MAX_LOPTC];
 };
 
+struct CustomPair {
+    string masv;
+    float diem;
+};
+
 // Utility functions
 string ChuanHoa_Chuoi(string &chuoi, int dodai);
 string ChuanHoa_InputNangCao(string chuoi, int dodai, bool toUpper = false, bool vietHoaDau = false);
@@ -159,7 +164,7 @@ string DangKy_LopTC(DSLopTC &DSLTC, TreeMH &DSMH, DSLopSV &DSLSV, string masv, s
 float TinhDiemTrungBinh(string masv, DSLopTC &DSLTC, TreeMH DSMH);
 int SearchLopSV_MALOP(DSLopSV &DSLSV, string malop);
 string InDTBLopSV_SoTC(DSLopSV &DSLSV, DSLopTC &DSLTC, TreeMH DSMH, string malop);
-string NhapDiem_LopTC(DSLopTC &DSLTC, TreeMH &DSMH, DSLopSV &DSLSV, string mamh, string nienkhoa, int hocky, int nhom, const vector<pair<string, float>>& diem_list);
+string NhapDiem_LopTC(DSLopTC &DSLTC, TreeMH &DSMH, DSLopSV &DSLSV, string mamh, string nienkhoa, int hocky, int nhom, CustomPair diem_list[], int diem_size);
 string InDiemTongKet(DSLopSV &DSLSV, DSLopTC &DSLTC, string malop);
 string InBangDiem_LopTC(DSLopTC &DSLTC, TreeMH &DSMH, DSLopSV &DSLSV, string mamh, string nienkhoa, int hocky, int nhom);
 
