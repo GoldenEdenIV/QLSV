@@ -4,6 +4,8 @@
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QTextStream>
+#include <QSpinBox>
+#include <QFormLayout>
 #include <sstream>
 #include <iomanip>
 
@@ -19,19 +21,346 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+class SingleInputDialog : public QDialog {
+public:
+    QLineEdit *inputEdit;
+
+    SingleInputDialog(const QString &title, const QString &label, QWidget *parent = nullptr) : QDialog(parent) {
+        setWindowTitle(title);
+        QFormLayout *layout = new QFormLayout(this);
+
+        inputEdit = new QLineEdit(this);
+        layout->addRow(label, inputEdit);
+
+        QPushButton *okButton = new QPushButton("OK", this);
+        QPushButton *cancelButton = new QPushButton("Cancel", this);
+        QHBoxLayout *buttonLayout = new QHBoxLayout();
+        buttonLayout->addWidget(okButton);
+        buttonLayout->addWidget(cancelButton);
+        layout->addRow(buttonLayout);
+
+        connect(okButton, &QPushButton::clicked, this, &QDialog::accept);
+        connect(cancelButton, &QPushButton::clicked, this, &QDialog::reject);
+    }
+
+    QString getInput() { return inputEdit->text(); }
+};
+
+class LopSVAddEditDialog : public QDialog {
+public:
+    QLineEdit *maLopEdit;
+    QLineEdit *tenLopEdit;
+
+    LopSVAddEditDialog(const QString &title, QWidget *parent = nullptr) : QDialog(parent) {
+        setWindowTitle(title);
+        QFormLayout *layout = new QFormLayout(this);
+
+        maLopEdit = new QLineEdit(this);
+        tenLopEdit = new QLineEdit(this);
+
+        layout->addRow("Mã lớp:", maLopEdit);
+        layout->addRow("Tên lớp:", tenLopEdit);
+
+        QPushButton *okButton = new QPushButton("OK", this);
+        QPushButton *cancelButton = new QPushButton("Cancel", this);
+        QHBoxLayout *buttonLayout = new QHBoxLayout();
+        buttonLayout->addWidget(okButton);
+        buttonLayout->addWidget(cancelButton);
+        layout->addRow(buttonLayout);
+
+        connect(okButton, &QPushButton::clicked, this, &QDialog::accept);
+        connect(cancelButton, &QPushButton::clicked, this, &QDialog::reject);
+    }
+
+    QString getMaLop() { return maLopEdit->text(); }
+    QString getTenLop() { return tenLopEdit->text(); }
+};
+
+class MonHocAddEditDialog : public QDialog {
+public:
+    QLineEdit *mamhEdit;
+    QLineEdit *tenmhEdit;
+    QLineEdit *stcltEdit;
+    QLineEdit *stcthEdit;
+
+    MonHocAddEditDialog(const QString &title, QWidget *parent = nullptr) : QDialog(parent) {
+        setWindowTitle(title);
+        QFormLayout *layout = new QFormLayout(this);
+
+        mamhEdit = new QLineEdit(this);
+        tenmhEdit = new QLineEdit(this);
+        stcltEdit = new QLineEdit(this);
+        stcthEdit = new QLineEdit(this);
+
+        layout->addRow("Mã MH:", mamhEdit);
+        layout->addRow("Tên MH:", tenmhEdit);
+        layout->addRow("STCLT:", stcltEdit);
+        layout->addRow("STCTH:", stcthEdit);
+
+        QPushButton *okButton = new QPushButton("OK", this);
+        QPushButton *cancelButton = new QPushButton("Cancel", this);
+        QHBoxLayout *buttonLayout = new QHBoxLayout();
+        buttonLayout->addWidget(okButton);
+        buttonLayout->addWidget(cancelButton);
+        layout->addRow(buttonLayout);
+
+        connect(okButton, &QPushButton::clicked, this, &QDialog::accept);
+        connect(cancelButton, &QPushButton::clicked, this, &QDialog::reject);
+    }
+
+    QString getMaMH() { return mamhEdit->text(); }
+    QString getTenMH() { return tenmhEdit->text(); }
+    QString getSTCLT() { return stcltEdit->text(); }
+    QString getSTCTH() { return stcthEdit->text(); }
+};
+
+class StudentAddEditDialog : public QDialog {
+public:
+    QLineEdit *maLopEdit;
+    QLineEdit *masvEdit;
+    QLineEdit *hoEdit;
+    QLineEdit *tenEdit;
+    QLineEdit *gioitinhEdit;
+    QLineEdit *sodtEdit;
+    QLineEdit *emailEdit;
+
+    StudentAddEditDialog(const QString &title, QWidget *parent = nullptr) : QDialog(parent) {
+        setWindowTitle(title);
+        QFormLayout *layout = new QFormLayout(this);
+
+        maLopEdit = new QLineEdit(this);
+        masvEdit = new QLineEdit(this);
+        hoEdit = new QLineEdit(this);
+        tenEdit = new QLineEdit(this);
+        gioitinhEdit = new QLineEdit(this);
+        sodtEdit = new QLineEdit(this);
+        emailEdit = new QLineEdit(this);
+
+        layout->addRow("Mã lớp:", maLopEdit);
+        layout->addRow("Mã SV:", masvEdit);
+        layout->addRow("Họ:", hoEdit);
+        layout->addRow("Tên:", tenEdit);
+        layout->addRow("Giới tính:", gioitinhEdit);
+        layout->addRow("SĐT:", sodtEdit);
+        layout->addRow("Email:", emailEdit);
+
+        QPushButton *okButton = new QPushButton("OK", this);
+        QPushButton *cancelButton = new QPushButton("Cancel", this);
+        QHBoxLayout *buttonLayout = new QHBoxLayout();
+        buttonLayout->addWidget(okButton);
+        buttonLayout->addWidget(cancelButton);
+        layout->addRow(buttonLayout);
+
+        connect(okButton, &QPushButton::clicked, this, &QDialog::accept);
+        connect(cancelButton, &QPushButton::clicked, this, &QDialog::reject);
+    }
+
+    QString getMaLop() { return maLopEdit->text(); }
+    QString getMaSV() { return masvEdit->text(); }
+    QString getHo() { return hoEdit->text(); }
+    QString getTen() { return tenEdit->text(); }
+    QString getGioiTinh() { return gioitinhEdit->text(); }
+    QString getSoDT() { return sodtEdit->text(); }
+    QString getEmail() { return emailEdit->text(); }
+};
+
+class LopTCAddDialog : public QDialog {
+public:
+    QLineEdit *mamhEdit;
+    QLineEdit *nienkhoaEdit;
+    QLineEdit *hockyEdit;
+    QLineEdit *nhomEdit;
+    QLineEdit *minsvEdit;
+    QLineEdit *maxsvEdit;
+
+    LopTCAddDialog(const QString &title, QWidget *parent = nullptr) : QDialog(parent) {
+        setWindowTitle(title);
+        QFormLayout *layout = new QFormLayout(this);
+
+        mamhEdit = new QLineEdit(this);
+        nienkhoaEdit = new QLineEdit(this);
+        hockyEdit = new QLineEdit(this);
+        nhomEdit = new QLineEdit(this);
+        minsvEdit = new QLineEdit(this);
+        maxsvEdit = new QLineEdit(this);
+
+        layout->addRow("Mã MH:", mamhEdit);
+        layout->addRow("Niên khóa:", nienkhoaEdit);
+        layout->addRow("Học kỳ:", hockyEdit);
+        layout->addRow("Nhóm:", nhomEdit);
+        layout->addRow("Min SV:", minsvEdit);
+        layout->addRow("Max SV:", maxsvEdit);
+
+        QPushButton *okButton = new QPushButton("OK", this);
+        QPushButton *cancelButton = new QPushButton("Cancel", this);
+        QHBoxLayout *buttonLayout = new QHBoxLayout();
+        buttonLayout->addWidget(okButton);
+        buttonLayout->addWidget(cancelButton);
+        layout->addRow(buttonLayout);
+
+        connect(okButton, &QPushButton::clicked, this, &QDialog::accept);
+        connect(cancelButton, &QPushButton::clicked, this, &QDialog::reject);
+    }
+
+    QString getMaMH() { return mamhEdit->text(); }
+    QString getNienKhoa() { return nienkhoaEdit->text(); }
+    QString getHocKy() { return hockyEdit->text(); }
+    QString getNhom() { return nhomEdit->text(); }
+    QString getMinSV() { return minsvEdit->text(); }
+    QString getMaxSV() { return maxsvEdit->text(); }
+};
+
+class LopTCEditDialog : public QDialog {
+public:
+    QLineEdit *mltcEdit;
+    QLineEdit *mamhEdit;
+    QLineEdit *nienkhoaEdit;
+    QLineEdit *hockyEdit;
+    QLineEdit *nhomEdit;
+    QLineEdit *minsvEdit;
+    QLineEdit *maxsvEdit;
+    QLineEdit *huylopEdit;
+
+    LopTCEditDialog(const QString &title, QWidget *parent = nullptr) : QDialog(parent) {
+        setWindowTitle(title);
+        QFormLayout *layout = new QFormLayout(this);
+
+        mltcEdit = new QLineEdit(this);
+        mamhEdit = new QLineEdit(this);
+        nienkhoaEdit = new QLineEdit(this);
+        hockyEdit = new QLineEdit(this);
+        nhomEdit = new QLineEdit(this);
+        minsvEdit = new QLineEdit(this);
+        maxsvEdit = new QLineEdit(this);
+        huylopEdit = new QLineEdit(this);
+
+        layout->addRow("Mã LTC:", mltcEdit);
+        layout->addRow("Mã MH mới:", mamhEdit);
+        layout->addRow("Niên khóa mới:", nienkhoaEdit);
+        layout->addRow("Học kỳ mới:", hockyEdit);
+        layout->addRow("Nhóm mới:", nhomEdit);
+        layout->addRow("Min SV mới:", minsvEdit);
+        layout->addRow("Max SV mới:", maxsvEdit);
+        layout->addRow("Hủy lớp (yes/no):", huylopEdit);
+
+        mamhEdit->setPlaceholderText("Bỏ trống nếu không đổi");
+        nienkhoaEdit->setPlaceholderText("Bỏ trống nếu không đổi");
+        hockyEdit->setPlaceholderText("Bỏ trống nếu không đổi");
+        nhomEdit->setPlaceholderText("Bỏ trống nếu không đổi");
+        minsvEdit->setPlaceholderText("Bỏ trống nếu không đổi");
+        maxsvEdit->setPlaceholderText("Bỏ trống nếu không đổi");
+        huylopEdit->setPlaceholderText("Bỏ trống nếu không đổi");
+
+        QPushButton *okButton = new QPushButton("OK", this);
+        QPushButton *cancelButton = new QPushButton("Cancel", this);
+        QHBoxLayout *buttonLayout = new QHBoxLayout();
+        buttonLayout->addWidget(okButton);
+        buttonLayout->addWidget(cancelButton);
+        layout->addRow(buttonLayout);
+
+        connect(okButton, &QPushButton::clicked, this, &QDialog::accept);
+        connect(cancelButton, &QPushButton::clicked, this, &QDialog::reject);
+    }
+
+    QString getMaLTC() { return mltcEdit->text(); }
+    QString getMaMH() { return mamhEdit->text(); }
+    QString getNienKhoa() { return nienkhoaEdit->text(); }
+    QString getHocKy() { return hockyEdit->text(); }
+    QString getNhom() { return nhomEdit->text(); }
+    QString getMinSV() { return minsvEdit->text(); }
+    QString getMaxSV() { return maxsvEdit->text(); }
+    QString getHuyLop() { return huylopEdit->text(); }
+};
+
+class LopTCInputDialog : public QDialog {
+public:
+    QLineEdit *mamhEdit;
+    QLineEdit *nienkhoaEdit;
+    QSpinBox *hockySpin;
+    QSpinBox *nhomSpin;
+
+    LopTCInputDialog(const QString &title, QWidget *parent = nullptr) : QDialog(parent) {
+        setWindowTitle(title);
+        QFormLayout *layout = new QFormLayout(this);
+
+        mamhEdit = new QLineEdit(this);
+        nienkhoaEdit = new QLineEdit(this);
+        hockySpin = new QSpinBox(this);
+        hockySpin->setRange(1, 10);
+        nhomSpin = new QSpinBox(this);
+        nhomSpin->setRange(1, 10);
+
+        layout->addRow("Mã MH:", mamhEdit);
+        layout->addRow("Niên khóa:", nienkhoaEdit);
+        layout->addRow("Học kỳ:", hockySpin);
+        layout->addRow("Nhóm:", nhomSpin);
+
+        QPushButton *okButton = new QPushButton("OK", this);
+        QPushButton *cancelButton = new QPushButton("Cancel", this);
+        QHBoxLayout *buttonLayout = new QHBoxLayout();
+        buttonLayout->addWidget(okButton);
+        buttonLayout->addWidget(cancelButton);
+        layout->addRow(buttonLayout);
+
+        connect(okButton, &QPushButton::clicked, this, &QDialog::accept);
+        connect(cancelButton, &QPushButton::clicked, this, &QDialog::reject);
+    }
+
+    QString getMaMH() { return mamhEdit->text(); }
+    QString getNienKhoa() { return nienkhoaEdit->text(); }
+    int getHocKy() { return hockySpin->value(); }
+    int getNhom() { return nhomSpin->value(); }
+};
+
+// Custom dialog for class input (malop)
+class MalopInputDialog : public QDialog {
+public:
+    QLineEdit *malopEdit;
+
+    MalopInputDialog(const QString &title, QWidget *parent = nullptr) : QDialog(parent) {
+        setWindowTitle(title);
+        QFormLayout *layout = new QFormLayout(this);
+
+        malopEdit = new QLineEdit(this);
+        layout->addRow("Mã lớp:", malopEdit);
+
+        QPushButton *okButton = new QPushButton("OK", this);
+        QPushButton *cancelButton = new QPushButton("Cancel", this);
+        QHBoxLayout *buttonLayout = new QHBoxLayout();
+        buttonLayout->addWidget(okButton);
+        buttonLayout->addWidget(cancelButton);
+        layout->addRow(buttonLayout);
+
+        connect(okButton, &QPushButton::clicked, this, &QDialog::accept);
+        connect(cancelButton, &QPushButton::clicked, this, &QDialog::reject);
+    }
+
+    QString getMaLop() { return malopEdit->text(); }
+};
+
+
+
 void MainWindow::refreshLopSVTable()
 {
     ui->lopSVTableView->clear();
     ui->lopSVTableView->setRowCount(DSLSV.n);
     ui->lopSVTableView->setColumnCount(3);
+
     QStringList headers;
     headers << "Mã Lớp" << "Tên Lớp" << "SLSV";
     ui->lopSVTableView->setHorizontalHeaderLabels(headers);
+
     for (int i = 0; i < DSLSV.n; i++) {
         ui->lopSVTableView->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(DSLSV.nodes[i].MALOP)));
         ui->lopSVTableView->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(DSLSV.nodes[i].TENLOP)));
         ui->lopSVTableView->setItem(i, 2, new QTableWidgetItem(QString::number(DSLSV.nodes[i].SLSV)));
     }
+
+    ui->lopSVTableView->resizeColumnsToContents();
+
+    ui->lopSVTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    ui->lopSVTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
 }
 
 void MainWindow::refreshMonHocTable()
@@ -50,6 +379,9 @@ void MainWindow::refreshMonHocTable()
         ui->monHocTableView->setItem(i, 2, new QTableWidgetItem(QString::number(arr.nodes[i].STCLT)));
         ui->monHocTableView->setItem(i, 3, new QTableWidgetItem(QString::number(arr.nodes[i].STCTH)));
     }
+    ui->monHocTableView->resizeColumnsToContents();
+    ui->monHocTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    ui->monHocTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 void MainWindow::refreshLopTCTable()
@@ -75,6 +407,9 @@ void MainWindow::refreshLopTCTable()
         ui->lopTCTableView->setItem(i, 8, new QTableWidgetItem(QString::number(ltc->SLSVDK)));
         ui->lopTCTableView->setItem(i, 9, new QTableWidgetItem(ltc->HUYLOP ? "Yes" : "No"));
     }
+    ui->lopTCTableView->resizeColumnsToContents();
+    ui->lopTCTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    ui->lopTCTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 void MainWindow::refreshSinhVienTable()
@@ -109,64 +444,53 @@ void MainWindow::refreshSinhVienTable()
             row++;
         }
     }
+    ui->sinhVienTableView->resizeColumnsToContents();
+    ui->sinhVienTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    ui->sinhVienTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 // Tab lớp sinh viên  =======================================================================
 
 void MainWindow::on_addClassButton_clicked()
 {
-    bool ok;
-    QString maLop = QInputDialog::getText(this, "Thêm Lớp SV", "Nhập mã lớp:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    QString tenLop = QInputDialog::getText(this, "Thêm Lớp SV", "Nhập tên lớp:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
+    LopSVAddEditDialog dialog("Thêm Lớp SV", this);
+    if (dialog.exec() != QDialog::Accepted) return;
+    QString maLop = dialog.getMaLop();
+    QString tenLop = dialog.getTenLop();
     std::string result = Them_LopSV(DSLSV, maLop.toStdString(), tenLop.toStdString());
     QMessageBox::information(this, "Kết Quả", QString::fromStdString(result));
     refreshLopSVTable();
 }
 
-
 void MainWindow::on_editClassButton_clicked()
 {
-    bool ok;
-    QString maLop = QInputDialog::getText(this, "Sửa Lớp SV", "Nhập mã lớp cần sửa:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    QString tenLopNew = QInputDialog::getText(this, "Sửa Lớp SV", "Nhập tên lớp mới (nếu không thay đổi thì bỏ trống):", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-
+    LopSVAddEditDialog dialog("Sửa Lớp SV", this);
+    dialog.tenLopEdit->setPlaceholderText("Bỏ trống nếu không đổi");
+    if (dialog.exec() != QDialog::Accepted) return;
+    QString maLop = dialog.getMaLop();
+    QString tenLopNew = dialog.getTenLop();
     std::string result = HieuChinh_LopSV(DSLSV, maLop.toStdString(), tenLopNew.toStdString());
     QMessageBox::information(this, "Kết Quả", QString::fromStdString(result));
     refreshLopSVTable();
 }
 
-
 void MainWindow::on_deleteClassButton_clicked()
 {
-    bool ok;
-    QString maLop = QInputDialog::getText(this, "Xóa Lớp SV", "Nhập mã lớp cần xóa:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-
+    SingleInputDialog dialog("Xóa Lớp SV", "Nhập mã lớp cần xóa:", this);
+    if (dialog.exec() != QDialog::Accepted) return;
+    QString maLop = dialog.getInput();
     int confirm = QMessageBox::question(this, "Xác Nhận", "Bạn có chắc muốn xóa lớp này?");
     if (confirm != QMessageBox::Yes) return;
-
     std::string result = Xoa_LopSV(DSLSV, maLop.toStdString());
     QMessageBox::information(this, "Kết Quả", QString::fromStdString(result));
     refreshLopSVTable();
 }
 
-
-void MainWindow::on_listClassesButton_clicked()
-{
-    isShowingStudentList = false;
-    refreshLopSVTable();
-}
-
-
 void MainWindow::on_listSortedStudentsButton_clicked()
 {
-    bool ok;
-    QString maLop = QInputDialog::getText(this, "Danh Sách SV Sắp Xếp", "Nhập mã lớp:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
+    MalopInputDialog dialog("Danh Sách SV Sắp Xếp", this);
+    if (dialog.exec() != QDialog::Accepted) return;
+    QString maLop = dialog.getMaLop();
     int idx = Tim_LopSV(DSLSV, maLop.toStdString());
     if (idx == -1) {
         QMessageBox::warning(this, "Lỗi", "Không tìm thấy lớp");
@@ -179,7 +503,6 @@ void MainWindow::on_listSortedStudentsButton_clicked()
     QStringList headers = {"Mã Lớp", "MASV", "Họ", "Tên", "Giới Tính", "SĐT", "Email"};
     ui->lopSVTableView->setHorizontalHeaderLabels(headers);
 
-    // Set flag to indicate we're showing student list
     isShowingStudentList = true;
 
     int row = 0;
@@ -197,19 +520,29 @@ void MainWindow::on_listSortedStudentsButton_clicked()
         row++;
         p = p->next;
     }
+    ui->lopSVTableView->resizeColumnsToContents();
+    ui->lopSVTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    ui->lopSVTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 
+void MainWindow::on_listClassesButton_clicked()
+{
+    isShowingStudentList = false;
+    refreshLopSVTable();
+}
+
 void MainWindow::on_addStudentsButton_clicked()
 {
-    bool ok;
-    QString maLop = QInputDialog::getText(this, "Thêm SV Vào Lớp", "Nhập mã lớp:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
+    MalopInputDialog dialog("Thêm SV Vào Lớp", this);
+    if (dialog.exec() != QDialog::Accepted) return;
+    QString maLop = dialog.getMaLop();
     int idx = Tim_LopSV(DSLSV, maLop.toStdString());
     if (idx == -1) {
         QMessageBox::warning(this, "Lỗi", "Không tìm thấy lớp");
         return;
     }
+    bool ok;
     while (true) {
         QString masv = QInputDialog::getText(this, "Thêm SV", "Nhập MASV (bỏ trống để dừng):", QLineEdit::Normal, "", &ok);
         if (!ok || masv.isEmpty()) break;
@@ -267,15 +600,12 @@ void MainWindow::on_addStudentsButton_clicked()
 
 void MainWindow::on_addSubjectButton_clicked()
 {
-    bool ok;
-    QString mamh = QInputDialog::getText(this, "Thêm Môn Học", "Nhập mã MH:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    QString tenmh = QInputDialog::getText(this, "Thêm Môn Học", "Nhập tên MH:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    QString stclt = QInputDialog::getText(this, "Thêm Môn Học", "Nhập STCLT:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    QString stcth = QInputDialog::getText(this, "Thêm Môn Học", "Nhập STCTH:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
+    MonHocAddEditDialog dialog("Thêm Môn Học", this);
+    if (dialog.exec() != QDialog::Accepted) return;
+    QString mamh = dialog.getMaMH();
+    QString tenmh = dialog.getTenMH();
+    QString stclt = dialog.getSTCLT();
+    QString stcth = dialog.getSTCTH();
     string result = Them_MonHoc(DSMH, mamh.toStdString(), tenmh.toStdString(), stclt.toStdString(), stcth.toStdString());
     QMessageBox::information(this, "Kết Quả", QString::fromStdString(result));
     refreshMonHocTable();
@@ -283,15 +613,15 @@ void MainWindow::on_addSubjectButton_clicked()
 
 void MainWindow::on_editSubjectButton_clicked()
 {
-    bool ok;
-    QString mamh = QInputDialog::getText(this, "Sửa Môn Học", "Nhập mã MH cần sửa:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    QString tenmh_new = QInputDialog::getText(this, "Sửa Môn Học", "Nhập tên MH mới (bỏ trống nếu không đổi):", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    QString stclt_new = QInputDialog::getText(this, "Sửa Môn Học", "Nhập STCLT mới (bỏ trống nếu không đổi):", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    QString stcth_new = QInputDialog::getText(this, "Sửa Môn Học", "Nhập STCTH mới (bỏ trống nếu không đổi):", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
+    MonHocAddEditDialog dialog("Sửa Môn Học", this);
+    dialog.tenmhEdit->setPlaceholderText("Bỏ trống nếu không đổi");
+    dialog.stcltEdit->setPlaceholderText("Bỏ trống nếu không đổi");
+    dialog.stcthEdit->setPlaceholderText("Bỏ trống nếu không đổi");
+    if (dialog.exec() != QDialog::Accepted) return;
+    QString mamh = dialog.getMaMH();
+    QString tenmh_new = dialog.getTenMH();
+    QString stclt_new = dialog.getSTCLT();
+    QString stcth_new = dialog.getSTCTH();
     string result = HieuChinh_MonHoc(DSMH, mamh.toStdString(), tenmh_new.toStdString(), stclt_new.toStdString(), stcth_new.toStdString());
     QMessageBox::information(this, "Kết Quả", QString::fromStdString(result));
     refreshMonHocTable();
@@ -299,16 +629,15 @@ void MainWindow::on_editSubjectButton_clicked()
 
 void MainWindow::on_deleteSubjectButton_clicked()
 {
-    bool ok;
-    QString mamh = QInputDialog::getText(this, "Xóa Môn Học", "Nhập mã MH cần xóa:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
+    SingleInputDialog dialog("Xóa Môn Học", "Nhập mã MH cần xóa:", this);
+    if (dialog.exec() != QDialog::Accepted) return;
+    QString mamh = dialog.getInput();
     int confirm = QMessageBox::question(this, "Xác Nhận", "Bạn có chắc muốn xóa môn học này?");
     if (confirm != QMessageBox::Yes) return;
     string result = Xoa_MonHoc(DSMH, mamh.toStdString(), true);
     QMessageBox::information(this, "Kết Quả", QString::fromStdString(result));
     refreshMonHocTable();
 }
-
 void MainWindow::on_listSubjectsButton_clicked()
 {
     refreshMonHocTable();
@@ -318,30 +647,25 @@ void MainWindow::on_listSubjectsButton_clicked()
 
 void MainWindow::on_addStudentButton_clicked()
 {
-    bool ok;
-    QString maLop = QInputDialog::getText(this, "Thêm Sinh Viên", "Nhập mã lớp:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
+    StudentAddEditDialog dialog("Thêm Sinh Viên", this);
+    if (dialog.exec() != QDialog::Accepted) return;
+    QString maLop = dialog.getMaLop();
     int idx = Tim_LopSV(DSLSV, maLop.toStdString());
     if (idx == -1) {
         QMessageBox::warning(this, "Lỗi", "Không tìm thấy lớp");
         return;
     }
-    QString masv = QInputDialog::getText(this, "Thêm Sinh Viên", "Nhập MASV:", QLineEdit::Normal, "", &ok);
-    if (!ok || masv.isEmpty()) return;
+    QString masv = dialog.getMaSV();
+    if (masv.isEmpty()) return;
     if (SearchSV_MASV(DSLSV, masv.toStdString()) != NULL) {
         QMessageBox::warning(this, "Lỗi", "MASV đã tồn tại");
         return;
     }
-    QString ho = QInputDialog::getText(this, "Thêm Sinh Viên", "Nhập họ:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    QString ten = QInputDialog::getText(this, "Thêm Sinh Viên", "Nhập tên:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    QString gioitinh = QInputDialog::getText(this, "Thêm Sinh Viên", "Nhập giới tính:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    QString sdt = QInputDialog::getText(this, "Thêm Sinh Viên", "Nhập SĐT:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    QString email = QInputDialog::getText(this, "Thêm Sinh Viên", "Nhập email:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
+    QString ho = dialog.getHo();
+    QString ten = dialog.getTen();
+    QString gioitinh = dialog.getGioiTinh();
+    QString sdt = dialog.getSoDT();
+    QString email = dialog.getEmail();
     PTRSV newNode = new NodeSV;
     newNode->sv.MASV = masv.toStdString();
     newNode->sv.HO = ho.toStdString();
@@ -363,42 +687,83 @@ void MainWindow::on_addStudentButton_clicked()
     on_listAllStudentsButton_clicked();
 }
 
-
 void MainWindow::on_editStudentButton_clicked()
 {
-    bool ok;
-    QString masv = QInputDialog::getText(this, "Sửa Sinh Viên", "Nhập MASV cần sửa:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
+    StudentAddEditDialog dialog("Sửa Sinh Viên", this);
+    dialog.maLopEdit->setPlaceholderText("Bỏ trống nếu không đổi");
+    dialog.hoEdit->setPlaceholderText("Bỏ trống nếu không đổi");
+    dialog.tenEdit->setPlaceholderText("Bỏ trống nếu không đổi");
+    dialog.gioitinhEdit->setPlaceholderText("Bỏ trống nếu không đổi");
+    dialog.sodtEdit->setPlaceholderText("Bỏ trống nếu không đổi");
+    dialog.emailEdit->setPlaceholderText("Bỏ trống nếu không đổi");
+    if (dialog.exec() != QDialog::Accepted) return;
+    QString masv = dialog.getMaSV();
     PTRSV p = SearchSV_MASV(DSLSV, masv.toStdString());
     if (p == NULL) {
         QMessageBox::warning(this, "Lỗi", "Không tìm thấy sinh viên");
         return;
     }
-    QString ho_new = QInputDialog::getText(this, "Sửa Sinh Viên", "Nhập họ mới (bỏ trống nếu không đổi):", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
+    QString ho_new = dialog.getHo();
     if (!ho_new.isEmpty()) p->sv.HO = ho_new.toStdString();
-    QString ten_new = QInputDialog::getText(this, "Sửa Sinh Viên", "Nhập tên mới (bỏ trống nếu không đổi):", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
+    QString ten_new = dialog.getTen();
     if (!ten_new.isEmpty()) p->sv.TEN = ten_new.toStdString();
-    QString gioitinh_new = QInputDialog::getText(this, "Sửa Sinh Viên", "Nhập giới tính mới (bỏ trống nếu không đổi):", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
+    QString gioitinh_new = dialog.getGioiTinh();
     if (!gioitinh_new.isEmpty()) p->sv.GIOITINH = gioitinh_new.toStdString();
-    QString sdt_new = QInputDialog::getText(this, "Sửa Sinh Viên", "Nhập SĐT mới (bỏ trống nếu không đổi):", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
+    QString sdt_new = dialog.getSoDT();
     if (!sdt_new.isEmpty()) p->sv.SODT = sdt_new.toStdString();
-    QString email_new = QInputDialog::getText(this, "Sửa Sinh Viên", "Nhập email mới (bỏ trống nếu không đổi):", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
+    QString email_new = dialog.getEmail();
     if (!email_new.isEmpty()) p->sv.EMAIL = email_new.toStdString();
+    QString malop_new = dialog.getMaLop();
+    if (!malop_new.isEmpty()) {
+        // Move to new class if different
+        int new_idx = Tim_LopSV(DSLSV, malop_new.toStdString());
+        if (new_idx == -1) {
+            QMessageBox::warning(this, "Lỗi", "Không tìm thấy lớp mới");
+            return;
+        }
+        // Find original index
+        int orig_idx = -1;
+        for (int i = 0; i < DSLSV.n; i++) {
+            PTRSV q = DSLSV.nodes[i].FirstSV;
+            while (q) {
+                if (q == p) {
+                    orig_idx = i;
+                    break;
+                }
+                q = q->next;
+            }
+            if (orig_idx != -1) break;
+        }
+        if (orig_idx != -1 && orig_idx != new_idx) {
+            // Remove from original
+            PTRSV prev = NULL;
+            PTRSV q = DSLSV.nodes[orig_idx].FirstSV;
+            while (q != p) {
+                prev = q;
+                q = q->next;
+            }
+            if (prev == NULL) {
+                DSLSV.nodes[orig_idx].FirstSV = p->next;
+            } else {
+                prev->next = p->next;
+            }
+            DSLSV.nodes[orig_idx].SLSV--;
+            // Add to new
+            p->next = DSLSV.nodes[new_idx].FirstSV;
+            DSLSV.nodes[new_idx].FirstSV = p;
+            DSLSV.nodes[new_idx].SLSV++;
+        }
+    }
     QMessageBox::information(this, "Kết Quả", "Sửa sinh viên thành công");
+    refreshLopSVTable();
     on_listAllStudentsButton_clicked();
 }
 
-
 void MainWindow::on_deleteStudentButton_clicked()
 {
-    bool ok;
-    QString masv = QInputDialog::getText(this, "Xóa Sinh Viên", "Nhập MASV cần xóa:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
+    SingleInputDialog dialog("Xóa Sinh Viên", "Nhập MASV cần xóa:", this);
+    if (dialog.exec() != QDialog::Accepted) return;
+    QString masv = dialog.getInput();
     int confirm = QMessageBox::question(this, "Xác Nhận", "Bạn có chắc muốn xóa sinh viên này?");
     if (confirm != QMessageBox::Yes) return;
     bool found = false;
@@ -440,19 +805,18 @@ void MainWindow::on_listAllStudentsButton_clicked()
 
 void MainWindow::on_addCreditClassButton_clicked()
 {
-    bool ok;
-    QString mamh = QInputDialog::getText(this, "Thêm Lớp TC", "Nhập mã MH:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    QString nienkhoa = QInputDialog::getText(this, "Thêm Lớp TC", "Nhập niên khóa:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    int hocky = QInputDialog::getInt(this, "Thêm Lớp TC", "Nhập học kỳ:", 1, 1, 10, 1, &ok);
-    if (!ok) return;
-    int nhom = QInputDialog::getInt(this, "Thêm Lớp TC", "Nhập nhóm:", 1, 1, 10, 1, &ok);
-    if (!ok) return;
-    int minsv = QInputDialog::getInt(this, "Thêm Lớp TC", "Nhập min SV:", 10, 1, 100, 1, &ok);
-    if (!ok) return;
-    int maxsv = QInputDialog::getInt(this, "Thêm Lớp TC", "Nhập max SV:", 50, 1, 100, 1, &ok);
-    if (!ok) return;
+    LopTCAddDialog dialog("Thêm Lớp TC", this);
+    if (dialog.exec() != QDialog::Accepted) return;
+    QString mamh = dialog.getMaMH();
+    QString nienkhoa = dialog.getNienKhoa();
+    QString hocky_str = dialog.getHocKy();
+    int hocky = hocky_str.toInt();
+    QString nhom_str = dialog.getNhom();
+    int nhom = nhom_str.toInt();
+    QString minsv_str = dialog.getMinSV();
+    int minsv = minsv_str.toInt();
+    QString maxsv_str = dialog.getMaxSV();
+    int maxsv = maxsv_str.toInt();
     string result = Them_LopTC(DSLTC, DSMH, mamh.toStdString(), nienkhoa.toStdString(), hocky, nhom, minsv, maxsv);
     QMessageBox::information(this, "Kết Quả", QString::fromStdString(result));
     refreshLopTCTable();
@@ -460,33 +824,27 @@ void MainWindow::on_addCreditClassButton_clicked()
 
 void MainWindow::on_editCreditClassButton_clicked()
 {
-    bool ok;
-    int mltc = QInputDialog::getInt(this, "Sửa Lớp TC", "Nhập mã LTC cần sửa:", 0, 0, 100000, 1, &ok);
-    if (!ok) return;
+    LopTCEditDialog dialog("Sửa Lớp TC", this);
+    if (dialog.exec() != QDialog::Accepted) return;
+    QString mltc_str = dialog.getMaLTC();
+    int mltc = mltc_str.toInt();
     LopTC *ltc = SearchLopTC_MALTC(DSLTC, mltc);
     if (!ltc) {
         QMessageBox::warning(this, "Lỗi", "Không tìm thấy lớp TC");
         return;
     }
-    QString mamh_new = QInputDialog::getText(this, "Sửa Lớp TC", "Nhập mã MH mới (bỏ trống nếu không đổi):", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    QString nienkhoa_new = QInputDialog::getText(this, "Sửa Lớp TC", "Nhập niên khóa mới (bỏ trống nếu không đổi):", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    QString hocky_new_str = QInputDialog::getText(this, "Sửa Lớp TC", "Nhập học kỳ mới (bỏ trống nếu không đổi):", QLineEdit::Normal, "", &ok);
+    QString mamh_new = dialog.getMaMH();
+    QString nienkhoa_new = dialog.getNienKhoa();
+    QString hocky_new_str = dialog.getHocKy();
     int hocky_new = hocky_new_str.isEmpty() ? ltc->HOCKY : hocky_new_str.toInt();
-    if (!ok) return;
-    QString nhom_new_str = QInputDialog::getText(this, "Sửa Lớp TC", "Nhập nhóm mới (bỏ trống nếu không đổi):", QLineEdit::Normal, "", &ok);
+    QString nhom_new_str = dialog.getNhom();
     int nhom_new = nhom_new_str.isEmpty() ? ltc->NHOM : nhom_new_str.toInt();
-    if (!ok) return;
-    QString minsv_new_str = QInputDialog::getText(this, "Sửa Lớp TC", "Nhập min SV mới (bỏ trống nếu không đổi):", QLineEdit::Normal, "", &ok);
+    QString minsv_new_str = dialog.getMinSV();
     int minsv_new = minsv_new_str.isEmpty() ? ltc->MINSV : minsv_new_str.toInt();
-    if (!ok) return;
-    QString maxsv_new_str = QInputDialog::getText(this, "Sửa Lớp TC", "Nhập max SV mới (bỏ trống nếu không đổi):", QLineEdit::Normal, "", &ok);
+    QString maxsv_new_str = dialog.getMaxSV();
     int maxsv_new = maxsv_new_str.isEmpty() ? ltc->MAXSV : maxsv_new_str.toInt();
-    if (!ok) return;
-    QString huylop_new_str = QInputDialog::getText(this, "Sửa Lớp TC", "Hủy lớp? (yes/no, bỏ trống nếu không đổi):", QLineEdit::Normal, "", &ok);
-    bool huylop_new = huylop_new_str.isEmpty() ? ltc->HUYLOP : (huylop_new_str.toLower() == "yes");
-    if (!ok) return;
+    QString huylop_new_str = dialog.getHuyLop().toLower();
+    bool huylop_new = huylop_new_str.isEmpty() ? ltc->HUYLOP : (huylop_new_str == "yes");
     string result = HieuChinh_LopTC(DSLTC, mltc, mamh_new.toStdString(), nienkhoa_new.toStdString(), hocky_new, nhom_new, minsv_new, maxsv_new, huylop_new);
     QMessageBox::information(this, "Kết Quả", QString::fromStdString(result));
     refreshLopTCTable();
@@ -494,9 +852,10 @@ void MainWindow::on_editCreditClassButton_clicked()
 
 void MainWindow::on_deleteCreditClassButton_clicked()
 {
-    bool ok;
-    int mltc = QInputDialog::getInt(this, "Xóa Lớp TC", "Nhập mã LTC cần xóa:", 0, 0, 100000, 1, &ok);
-    if (!ok) return;
+    SingleInputDialog dialog("Xóa Lớp TC", "Nhập mã LTC cần xóa:", this);
+    if (dialog.exec() != QDialog::Accepted) return;
+    QString mltc_str = dialog.getInput();
+    int mltc = mltc_str.toInt();
     int confirm = QMessageBox::question(this, "Xác Nhận", "Bạn có chắc muốn xóa lớp TC này?");
     if (confirm != QMessageBox::Yes) return;
     string result = Xoa_LopTC(DSLTC, mltc, true);
@@ -504,35 +863,97 @@ void MainWindow::on_deleteCreditClassButton_clicked()
     refreshLopTCTable();
 }
 
+class RegisterDialog : public QDialog {
+public:
+    QLineEdit *masvEdit;
+    QLabel *studentInfoLabel;
+    QLineEdit *nienkhoaEdit;
+    QSpinBox *hockySpin;
+    QLineEdit *mamhEdit;
+    QSpinBox *nhomSpin;
+
+    RegisterDialog(DSLopSV &DSLSV, QWidget *parent = nullptr) : QDialog(parent), m_DSLSV(DSLSV) {
+        setWindowTitle("Đăng Ký Lớp TC");
+        QFormLayout *layout = new QFormLayout(this);
+
+        masvEdit = new QLineEdit(this);
+        studentInfoLabel = new QLabel(this);
+        studentInfoLabel->setWordWrap(true);
+        nienkhoaEdit = new QLineEdit(this);
+        hockySpin = new QSpinBox(this);
+        hockySpin->setRange(1, 10);
+        mamhEdit = new QLineEdit(this);
+        nhomSpin = new QSpinBox(this);
+        nhomSpin->setRange(1, 10);
+
+        layout->addRow("Mã SV:", masvEdit);
+        layout->addRow("Thông tin SV:", studentInfoLabel);
+        layout->addRow("Niên khóa:", nienkhoaEdit);
+        layout->addRow("Học kỳ:", hockySpin);
+        layout->addRow("Mã MH:", mamhEdit);
+        layout->addRow("Nhóm:", nhomSpin);
+
+        QPushButton *okButton = new QPushButton("OK", this);
+        QPushButton *cancelButton = new QPushButton("Cancel", this);
+        QHBoxLayout *buttonLayout = new QHBoxLayout();
+        buttonLayout->addWidget(okButton);
+        buttonLayout->addWidget(cancelButton);
+        layout->addRow(buttonLayout);
+
+        connect(okButton, &QPushButton::clicked, this, &QDialog::accept);
+        connect(cancelButton, &QPushButton::clicked, this, &QDialog::reject);
+        connect(masvEdit, &QLineEdit::textChanged, this, &RegisterDialog::updateStudentInfo);
+    }
+
+    QString getMaSV() { return masvEdit->text(); }
+    QString getNienKhoa() { return nienkhoaEdit->text(); }
+    int getHocKy() { return hockySpin->value(); }
+    QString getMaMH() { return mamhEdit->text(); }
+    int getNhom() { return nhomSpin->value(); }
+
+private:
+    DSLopSV &m_DSLSV;
+
+    void updateStudentInfo(const QString &masv) {
+        PTRSV sv = SearchSV_MASV(m_DSLSV, masv.toStdString());
+        if (sv) {
+            QString info = QString("Họ: %1\nTên: %2\nGiới tính: %3\nSĐT: %4\nEmail: %5")
+                               .arg(QString::fromStdString(sv->sv.HO))
+                               .arg(QString::fromStdString(sv->sv.TEN))
+                               .arg(QString::fromStdString(sv->sv.GIOITINH))
+                               .arg(QString::fromStdString(sv->sv.SODT))
+                               .arg(QString::fromStdString(sv->sv.EMAIL));
+            studentInfoLabel->setText(info);
+        } else {
+            studentInfoLabel->setText("Không tìm thấy sinh viên");
+        }
+    }
+};
+
 void MainWindow::on_registerStudentButton_clicked()
 {
-    bool ok;
-    QString masv = QInputDialog::getText(this, "Đăng Ký Lớp TC", "Nhập MASV:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    QString nienkhoa = QInputDialog::getText(this, "Đăng Ký Lớp TC", "Nhập niên khóa:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    int hocky = QInputDialog::getInt(this, "Đăng Ký Lớp TC", "Nhập học kỳ:", 1, 1, 10, 1, &ok);
-    if (!ok) return;
-    QString mamh = QInputDialog::getText(this, "Đăng Ký Lớp TC", "Nhập mã MH:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    int nhom = QInputDialog::getInt(this, "Đăng Ký Lớp TC", "Nhập nhóm:", 1, 1, 10, 1, &ok);
-    if (!ok) return;
-    string result = DangKy_LopTC(DSLTC, DSMH, DSLSV, masv.toStdString(), nienkhoa.toStdString(), hocky, mamh.toStdString(), nhom);
+    RegisterDialog dialog(DSLSV, this);
+    if (dialog.exec() != QDialog::Accepted) return;
+
+    QString masv = dialog.getMaSV();
+    QString nienkhoa = dialog.getNienKhoa();
+    int hocky = dialog.getHocKy();
+    QString mamh = dialog.getMaMH();
+    int nhom = dialog.getNhom();
+
+    std::string result = DangKy_LopTC(DSLTC, DSMH, DSLSV, masv.toStdString(), nienkhoa.toStdString(), hocky, mamh.toStdString(), nhom);
     QMessageBox::information(this, "Kết Quả", QString::fromStdString(result));
-    refreshLopTCTable();
+    refreshLopTCTable(); // Refresh to update SLSVDK if needed
 }
 
 void MainWindow::on_enterScoresButton_clicked()
 {
-    bool ok;
-    QString mamh = QInputDialog::getText(this, "Nhập Điểm Lớp TC", "Nhập mã MH:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    QString nienkhoa = QInputDialog::getText(this, "Nhập Điểm Lớp TC", "Nhập niên khóa:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    int hocky = QInputDialog::getInt(this, "Nhập Điểm Lớp TC", "Nhập học kỳ:", 1, 1, 10, 1, &ok);
-    if (!ok) return;
-    int nhom = QInputDialog::getInt(this, "Nhập Điểm Lớp TC", "Nhập nhóm:", 1, 1, 10, 1, &ok);
-    if (!ok) return;
+    LopTCInputDialog dialog("Nhập Điểm Lớp TC", this);
+    if (dialog.exec() != QDialog::Accepted) return;
+    QString mamh = dialog.getMaMH();
+    QString nienkhoa = dialog.getNienKhoa();
+    int hocky = dialog.getHocKy();
+    int nhom = dialog.getNhom();
 
     LopTC *ltc = SearchLopTC(DSLTC, mamh.toStdString(), nienkhoa.toStdString(), hocky, nhom);
     if (!ltc) {
@@ -540,7 +961,6 @@ void MainWindow::on_enterScoresButton_clicked()
         return;
     }
 
-    // Count the number of students to determine array size
     int diem_size = 0;
     PTRDK p = ltc->DSDK;
     while (p) {
@@ -548,16 +968,16 @@ void MainWindow::on_enterScoresButton_clicked()
         p = p->next;
     }
 
-    // Create CustomPair array
     CustomPair* diem_list = new CustomPair[diem_size];
     int index = 0;
 
     p = ltc->DSDK;
+    bool ok;
     while (p) {
         QString masv_qs = QString::fromStdString(p->dk.MASV);
         float diem = QInputDialog::getDouble(this, "Nhập Điểm", "Nhập điểm cho SV " + masv_qs + ":", p->dk.DIEM, 0, 10, 1, &ok);
         if (!ok) {
-            delete[] diem_list; // Clean up memory
+            delete[] diem_list;
             return;
         }
 
@@ -569,7 +989,6 @@ void MainWindow::on_enterScoresButton_clicked()
 
     string result = NhapDiem_LopTC(DSLTC, DSMH, DSLSV, mamh.toStdString(), nienkhoa.toStdString(), hocky, nhom, diem_list, diem_size);
 
-    // Clean up memory
     delete[] diem_list;
 
     QMessageBox::information(this, "Kết Quả", QString::fromStdString(result));
@@ -577,132 +996,245 @@ void MainWindow::on_enterScoresButton_clicked()
 
 void MainWindow::on_listRegisteredStudentsButton_clicked()
 {
-    bool ok;
-    QString mamh = QInputDialog::getText(this, "Danh Sách SV ĐK Lớp TC", "Nhập mã MH:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    QString nienkhoa = QInputDialog::getText(this, "Danh Sách SV ĐK Lớp TC", "Nhập niên khóa:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    int hocky = QInputDialog::getInt(this, "Danh Sách SV ĐK Lớp TC", "Nhập học kỳ:", 1, 1, 10, 1, &ok);
-    if (!ok) return;
-    int nhom = QInputDialog::getInt(this, "Danh Sách SV ĐK Lớp TC", "Nhập nhóm:", 1, 1, 10, 1, &ok);
-    if (!ok) return;
+    LopTCInputDialog dialog("Danh Sách SV ĐK Lớp TC", this);
+    if (dialog.exec() != QDialog::Accepted) return;
+
+    QString mamh = dialog.getMaMH();
+    QString nienkhoa = dialog.getNienKhoa();
+    int hocky = dialog.getHocKy();
+    int nhom = dialog.getNhom();
+
     LopTC *ltc = SearchLopTC(DSLTC, mamh.toStdString(), nienkhoa.toStdString(), hocky, nhom);
     if (!ltc) {
         QMessageBox::warning(this, "Lỗi", "Không tìm thấy lớp TC");
         return;
     }
-    ui->sinhVienTableView->clear();
-    ui->sinhVienTableView->setRowCount(0);
-    ui->sinhVienTableView->setColumnCount(6);
+
+    // Clear and set up lopTCTableView for registered students
+    ui->lopTCTableView->clear();
+    ui->lopTCTableView->setRowCount(0);
+    ui->lopTCTableView->setColumnCount(6);
     QStringList headers = {"MASV", "Họ", "Tên", "Giới Tính", "SĐT", "Email"};
-    ui->sinhVienTableView->setHorizontalHeaderLabels(headers);
+    ui->lopTCTableView->setHorizontalHeaderLabels(headers);
+
     int row = 0;
     PTRDK p = ltc->DSDK;
     while (p) {
         PTRSV sv = SearchSV_MASV(DSLSV, p->dk.MASV);
         if (sv) {
-            ui->sinhVienTableView->insertRow(row);
-            ui->sinhVienTableView->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(sv->sv.MASV)));
-            ui->sinhVienTableView->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(sv->sv.HO)));
-            ui->sinhVienTableView->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(sv->sv.TEN)));
-            ui->sinhVienTableView->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(sv->sv.GIOITINH)));
-            ui->sinhVienTableView->setItem(row, 4, new QTableWidgetItem(QString::fromStdString(sv->sv.SODT)));
-            ui->sinhVienTableView->setItem(row, 5, new QTableWidgetItem(QString::fromStdString(sv->sv.EMAIL)));
+            ui->lopTCTableView->insertRow(row);
+            ui->lopTCTableView->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(sv->sv.MASV)));
+            ui->lopTCTableView->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(sv->sv.HO)));
+            ui->lopTCTableView->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(sv->sv.TEN)));
+            ui->lopTCTableView->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(sv->sv.GIOITINH)));
+            ui->lopTCTableView->setItem(row, 4, new QTableWidgetItem(QString::fromStdString(sv->sv.SODT)));
+            ui->lopTCTableView->setItem(row, 5, new QTableWidgetItem(QString::fromStdString(sv->sv.EMAIL)));
             row++;
         }
         p = p->next;
     }
+    ui->lopTCTableView->resizeColumnsToContents();
+    ui->lopTCTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    ui->lopTCTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 void MainWindow::on_printScoresButton_clicked()
 {
-    bool ok;
-    QString mamh = QInputDialog::getText(this, "In Bảng Điểm Lớp TC", "Nhập mã MH:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    QString nienkhoa = QInputDialog::getText(this, "In Bảng Điểm Lớp TC", "Nhập niên khóa:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    int hocky = QInputDialog::getInt(this, "In Bảng Điểm Lớp TC", "Nhập học kỳ:", 1, 1, 10, 1, &ok);
-    if (!ok) return;
-    int nhom = QInputDialog::getInt(this, "In Bảng Điểm Lớp TC", "Nhập nhóm:", 1, 1, 10, 1, &ok);
-    if (!ok) return;
+    LopTCInputDialog dialog("In Bảng Điểm Lớp TC", this);
+    if (dialog.exec() != QDialog::Accepted) return;
+
+    QString mamh = dialog.getMaMH();
+    QString nienkhoa = dialog.getNienKhoa();
+    int hocky = dialog.getHocKy();
+    int nhom = dialog.getNhom();
+
     LopTC *ltc = SearchLopTC(DSLTC, mamh.toStdString(), nienkhoa.toStdString(), hocky, nhom);
     if (!ltc) {
         QMessageBox::warning(this, "Lỗi", "Không tìm thấy lớp TC");
         return;
     }
-    ui->sinhVienTableView->clear();
-    ui->sinhVienTableView->setRowCount(0);
-    ui->sinhVienTableView->setColumnCount(4);
+
+    // Clear and set up lopTCTableView for scores
+    ui->lopTCTableView->clear();
+    ui->lopTCTableView->setRowCount(0);
+    ui->lopTCTableView->setColumnCount(3);
     QStringList headers = {"MASV", "Họ Tên", "Điểm"};
-    ui->sinhVienTableView->setHorizontalHeaderLabels(headers);
+    ui->lopTCTableView->setHorizontalHeaderLabels(headers);
+
     int row = 0;
     PTRDK p = ltc->DSDK;
     while (p) {
         PTRSV sv = SearchSV_MASV(DSLSV, p->dk.MASV);
         if (sv) {
-            ui->sinhVienTableView->insertRow(row);
-            ui->sinhVienTableView->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(sv->sv.MASV)));
+            ui->lopTCTableView->insertRow(row);
+            ui->lopTCTableView->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(sv->sv.MASV)));
             QString hoten = QString::fromStdString(sv->sv.HO) + " " + QString::fromStdString(sv->sv.TEN);
-            ui->sinhVienTableView->setItem(row, 1, new QTableWidgetItem(hoten));
-            ui->sinhVienTableView->setItem(row, 2, new QTableWidgetItem(QString::number(p->dk.DIEM, 'f', 1)));
+            ui->lopTCTableView->setItem(row, 1, new QTableWidgetItem(hoten));
+            ui->lopTCTableView->setItem(row, 2, new QTableWidgetItem(QString::number(p->dk.DIEM, 'f', 1)));
             row++;
         }
         p = p->next;
     }
+    ui->lopTCTableView->resizeColumnsToContents();
+    ui->lopTCTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    ui->lopTCTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 void MainWindow::on_printAvgScoresButton_clicked()
 {
-    bool ok;
-    QString malop = QInputDialog::getText(this, "In ĐTB Lớp SV", "Nhập mã lớp:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
+    MalopInputDialog dialog("In ĐTB Lớp SV", this);
+    if (dialog.exec() != QDialog::Accepted) return;
+
+    QString malop = dialog.getMaLop();
     int idx = Tim_LopSV(DSLSV, malop.toStdString());
     if (idx == -1) {
         QMessageBox::warning(this, "Lỗi", "Không tìm thấy lớp");
         return;
     }
-    ui->sinhVienTableView->clear();
-    ui->sinhVienTableView->setRowCount(0);
-    ui->sinhVienTableView->setColumnCount(4);
+
+    // Clear and set up lopTCTableView for avg scores
+    ui->lopTCTableView->clear();
+    ui->lopTCTableView->setRowCount(0);
+    ui->lopTCTableView->setColumnCount(4);
     QStringList headers = {"MASV", "Họ", "Tên", "ĐTB"};
-    ui->sinhVienTableView->setHorizontalHeaderLabels(headers);
+    ui->lopTCTableView->setHorizontalHeaderLabels(headers);
+
     int row = 0;
     PTRSV p = DSLSV.nodes[idx].FirstSV;
     while (p) {
         float dtb = TinhDiemTrungBinh(p->sv.MASV, DSLTC, DSMH);
-        ui->sinhVienTableView->insertRow(row);
-        ui->sinhVienTableView->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(p->sv.MASV)));
-        ui->sinhVienTableView->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(p->sv.HO)));
-        ui->sinhVienTableView->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(p->sv.TEN)));
-        ui->sinhVienTableView->setItem(row, 3, new QTableWidgetItem(QString::number(dtb, 'f', 2)));
+        ui->lopTCTableView->insertRow(row);
+        ui->lopTCTableView->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(p->sv.MASV)));
+        ui->lopTCTableView->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(p->sv.HO)));
+        ui->lopTCTableView->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(p->sv.TEN)));
+        ui->lopTCTableView->setItem(row, 3, new QTableWidgetItem(QString::number(dtb, 'f', 2)));
         row++;
         p = p->next;
     }
+    ui->lopTCTableView->resizeColumnsToContents();
+    ui->lopTCTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    ui->lopTCTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
+// For on_printTotalScoresButton_clicked (Điểm Tổng Kết Lớp SV)
 void MainWindow::on_printTotalScoresButton_clicked()
 {
-    bool ok;
-    QString malop = QInputDialog::getText(this, "In Điểm Tổng Kết Lớp SV", "Nhập mã lớp:", QLineEdit::Normal, "", &ok);
-    if (!ok) return;
-    string result = InDiemTongKet(DSLSV, DSLTC, malop.toStdString());
-    QMessageBox::information(this, "Điểm Tổng Kết", QString::fromStdString(result));
+    MalopInputDialog dialog("In Điểm Tổng Kết Lớp SV", this);
+    if (dialog.exec() != QDialog::Accepted) return;
+
+    QString malop = dialog.getMaLop();
+    int idx = Tim_LopSV(DSLSV, malop.toStdString());
+    if (idx == -1) {
+        QMessageBox::warning(this, "Lỗi", "Không tìm thấy lớp");
+        return;
+    }
+
+    string danhSachMaMH[MAX_LOPTC];
+    int numMH = 0;
+    for (int j = 0; j < DSLTC.n; j++) {
+        if (DSLTC.nodes[j] && !DSLTC.nodes[j]->HUYLOP) {
+            string mamh = DSLTC.nodes[j]->MAMH;
+            bool exists = false;
+            for (int k = 0; k < numMH; k++) {
+                if (danhSachMaMH[k] == mamh) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists) {
+                danhSachMaMH[numMH++] = mamh;
+            }
+        }
+    }
+
+    ui->lopTCTableView->clear();
+    ui->lopTCTableView->setRowCount(0);
+    int colCount = 4 + numMH; // STT, MASV, HO, TEN + each MH
+    ui->lopTCTableView->setColumnCount(colCount);
+    QStringList headers = {"STT", "MASV", "Họ", "Tên"};
+    for (int k = 0; k < numMH; k++) {
+        headers << QString::fromStdString(danhSachMaMH[k]);
+    }
+    ui->lopTCTableView->setHorizontalHeaderLabels(headers);
+
+    int row = 0;
+    int stt = 1;
+    PTRSV p = DSLSV.nodes[idx].FirstSV;
+    while (p) {
+        ui->lopTCTableView->insertRow(row);
+        ui->lopTCTableView->setItem(row, 0, new QTableWidgetItem(QString::number(stt)));
+        ui->lopTCTableView->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(p->sv.MASV)));
+        ui->lopTCTableView->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(p->sv.HO)));
+        ui->lopTCTableView->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(p->sv.TEN)));
+
+        for (int k = 0; k < numMH; ++k) {
+            float diem = -1;
+            bool timThay = false;
+            for (int j = 0; j < DSLTC.n; j++) {
+                if (DSLTC.nodes[j] && !DSLTC.nodes[j]->HUYLOP && DSLTC.nodes[j]->MAMH == danhSachMaMH[k]) {
+                    PTRDK dk = DSLTC.nodes[j]->DSDK;
+                    while (dk) {
+                        if (dk->dk.MASV == p->sv.MASV) {
+                            diem = dk->dk.DIEM;
+                            timThay = true;
+                            break;
+                        }
+                        dk = dk->next;
+                    }
+                    if (timThay) break;
+                }
+            }
+            QString diemStr = (timThay && diem >= 0) ? QString::number(diem, 'f', 0) : "";
+            ui->lopTCTableView->setItem(row, 4 + k, new QTableWidgetItem(diemStr));
+        }
+        row++;
+        stt++;
+        p = p->next;
+    }
+    ui->lopTCTableView->resizeColumnsToContents();
+    ui->lopTCTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    ui->lopTCTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 
 void MainWindow::on_lopSVSearchLineEdit_textChanged(const QString &arg1)
 {
-    QString search = arg1.toLower();
+    // Set placeholder text based on current view
+    if (isShowingStudentList) {
+        ui->lopSVSearchLineEdit->setPlaceholderText("Tìm kiếm theo MASV, Họ, Tên hoặc Họ Tên...");
+    } else {
+        ui->lopSVSearchLineEdit->setPlaceholderText("Tìm kiếm theo Mã Lớp, Tên Lớp...");
+    }
+
+    QString search = arg1.toLower().trimmed();
     for (int row = 0; row < ui->lopSVTableView->rowCount(); row++) {
         bool match = false;
-
         if (isShowingStudentList) {
             // When showing student list: search in MASV (col 1), Họ (col 2), and Tên (col 3)
-            for (int col = 1; col <= 3; col++) {
-                if (ui->lopSVTableView->item(row, col) &&
-                    ui->lopSVTableView->item(row, col)->text().toLower().contains(search)) {
+
+            // Check MASV first
+            if (ui->lopSVTableView->item(row, 1) &&
+                ui->lopSVTableView->item(row, 1)->text().toLower().contains(search)) {
+                match = true;
+            }
+
+            // Check individual columns (Họ, Tên)
+            if (!match) {
+                for (int col = 2; col <= 3; col++) {
+                    if (ui->lopSVTableView->item(row, col) &&
+                        ui->lopSVTableView->item(row, col)->text().toLower().contains(search)) {
+                        match = true;
+                        break;
+                    }
+                }
+            }
+
+            // Check combined full name (Họ + Tên)
+            if (!match && ui->lopSVTableView->item(row, 2) && ui->lopSVTableView->item(row, 3)) {
+                QString fullName = (ui->lopSVTableView->item(row, 2)->text() + " " +
+                                    ui->lopSVTableView->item(row, 3)->text()).toLower();
+                if (fullName.contains(search)) {
                     match = true;
-                    break;
                 }
             }
         } else {
@@ -721,10 +1253,11 @@ void MainWindow::on_lopSVSearchLineEdit_textChanged(const QString &arg1)
 
 void MainWindow::on_monHocSearchLineEdit_textChanged(const QString &arg1)
 {
+    ui->monHocSearchLineEdit->setPlaceholderText("Tìm kiếm theo Mã MH, Tên MH...");
+
     QString search = arg1.toLower();
     for (int row = 0; row < ui->monHocTableView->rowCount(); row++) {
         bool match = false;
-
         // Search only in: Mã MH (col 0), Tên MH (col 1)
         for (int col = 0; col <= 1; col++) {
             if (ui->monHocTableView->item(row, col) &&
@@ -733,35 +1266,55 @@ void MainWindow::on_monHocSearchLineEdit_textChanged(const QString &arg1)
                 break;
             }
         }
-
         ui->monHocTableView->setRowHidden(row, !match);
     }
 }
 
 void MainWindow::on_sinhVienSearchLineEdit_textChanged(const QString &arg1)
 {
-    QString search = arg1.toLower();
+    ui->sinhVienSearchLineEdit->setPlaceholderText("Tìm kiếm theo Mã SV, Họ, Tên hoặc Họ Tên...");
+
+    QString search = arg1.toLower().trimmed();
     for (int row = 0; row < ui->sinhVienTableView->rowCount(); row++) {
         bool match = false;
 
-        // Search only in: Mã SV (col 0), Họ (col 1), Tên (col 2)
-        for (int col = 0; col <= 2; col++) {
-            if (ui->sinhVienTableView->item(row, col) &&
-                ui->sinhVienTableView->item(row, col)->text().toLower().contains(search)) {
-                match = true;
-                break;
+        // Check Mã SV first
+        if (ui->sinhVienTableView->item(row, 0) &&
+            ui->sinhVienTableView->item(row, 0)->text().toLower().contains(search)) {
+            match = true;
+        }
+
+        // Check individual columns (Họ, Tên)
+        if (!match) {
+            for (int col = 1; col <= 2; col++) {
+                if (ui->sinhVienTableView->item(row, col) &&
+                    ui->sinhVienTableView->item(row, col)->text().toLower().contains(search)) {
+                    match = true;
+                    break;
+                }
             }
         }
+
+        // Check combined full name (Họ + Tên)
+        if (!match && ui->sinhVienTableView->item(row, 1) && ui->sinhVienTableView->item(row, 2)) {
+            QString fullName = (ui->sinhVienTableView->item(row, 1)->text() + " " +
+                                ui->sinhVienTableView->item(row, 2)->text()).toLower();
+            if (fullName.contains(search)) {
+                match = true;
+            }
+        }
+
         ui->sinhVienTableView->setRowHidden(row, !match);
     }
 }
 
 void MainWindow::on_lopTCSearchLineEdit_textChanged(const QString &arg1)
 {
+    ui->lopTCSearchLineEdit->setPlaceholderText("Tìm kiếm theo Mã LTC, Mã MH, Tên MH...");
+
     QString search = arg1.toLower();
     for (int row = 0; row < ui->lopTCTableView->rowCount(); row++) {
         bool match = false;
-
         // Search in: Mã LTC (col 0), Mã MH (col 1), Tên MH (col 2)
         for (int col = 0; col <= 2; col++) {
             if (ui->lopTCTableView->item(row, col) &&
@@ -770,7 +1323,6 @@ void MainWindow::on_lopTCSearchLineEdit_textChanged(const QString &arg1)
                 break;
             }
         }
-
         ui->lopTCTableView->setRowHidden(row, !match);
     }
 }
@@ -796,4 +1348,36 @@ void MainWindow::on_writeFileButton_clicked()
 
 
 
+
+
+
+
+
+
+
+void MainWindow::on_disableCreditClassButton_clicked()
+{
+    LopTCInputDialog dialog("Hủy Lớp TC", this);
+    if (dialog.exec() != QDialog::Accepted) return;
+    QString mamh = dialog.getMaMH();
+    QString nienkhoa = dialog.getNienKhoa();
+    int hocky = dialog.getHocKy();
+    int nhom = dialog.getNhom();
+    LopTC *ltc = SearchLopTC(DSLTC, mamh.toStdString(), nienkhoa.toStdString(), hocky, nhom);
+    if (!ltc) {
+        QMessageBox::warning(this, "Lỗi", "Không tìm thấy lớp TC");
+        return;
+    }
+    int confirm = QMessageBox::question(this, "Xác Nhận", "Bạn có chắc muốn hủy lớp này?");
+    if (confirm != QMessageBox::Yes) return;
+    ltc->HUYLOP = true;
+    refreshLopTCTable();
+    QMessageBox::information(this, "Kết Quả", "Đã hủy lớp thành công");
+}
+
+
+void MainWindow::on_printCreditClassButton_clicked()
+{
+    refreshLopTCTable();
+}
 

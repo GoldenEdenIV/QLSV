@@ -85,6 +85,10 @@ private slots:
 
     void on_deleteStudentButton_clicked();
 
+    void on_disableCreditClassButton_clicked();
+
+    void on_printCreditClassButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     DSLopTC DSLTC;

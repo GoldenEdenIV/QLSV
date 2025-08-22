@@ -50,10 +50,10 @@ public:
     QWidget *tab_3;
     QPushButton *listAllStudentsButton;
     QLineEdit *sinhVienSearchLineEdit;
-    QTableWidget *sinhVienTableView;
     QPushButton *editStudentButton;
     QPushButton *deleteStudentButton;
     QPushButton *addStudentButton;
+    QTableWidget *sinhVienTableView;
     QWidget *tab_4;
     QPushButton *editCreditClassButton;
     QPushButton *deleteCreditClassButton;
@@ -66,16 +66,18 @@ public:
     QPushButton *printAvgScoresButton;
     QPushButton *printTotalScoresButton;
     QTableWidget *lopTCTableView;
+    QPushButton *disableCreditClassButton;
+    QPushButton *printCreditClassButton;
     QLabel *label;
-    QPushButton *readFileButton;
     QPushButton *writeFileButton;
+    QPushButton *readFileButton;
     QStatusBar *statusbar;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(1040, 833);
+        MainWindow->resize(1532, 920);
         actionRead = new QAction(MainWindow);
         actionRead->setObjectName("actionRead");
         actionWrite = new QAction(MainWindow);
@@ -84,8 +86,8 @@ public:
         centralwidget->setObjectName("centralwidget");
         TabWidget = new QTabWidget(centralwidget);
         TabWidget->setObjectName("TabWidget");
-        TabWidget->setGeometry(QRect(20, 80, 1000, 701));
-        TabWidget->setMaximumSize(QSize(1000, 800));
+        TabWidget->setGeometry(QRect(20, 80, 1881, 761));
+        TabWidget->setMaximumSize(QSize(2000, 1500));
         QFont font;
         font.setPointSize(12);
         TabWidget->setFont(font);
@@ -110,13 +112,13 @@ public:
         listSortedStudentsButton->setGeometry(QRect(0, 310, 161, 41));
         lopSVSearchLineEdit = new QLineEdit(tab);
         lopSVSearchLineEdit->setObjectName("lopSVSearchLineEdit");
-        lopSVSearchLineEdit->setGeometry(QRect(190, 30, 401, 41));
+        lopSVSearchLineEdit->setGeometry(QRect(190, 30, 591, 41));
         addStudentsButton = new QPushButton(tab);
         addStudentsButton->setObjectName("addStudentsButton");
         addStudentsButton->setGeometry(QRect(0, 380, 161, 41));
         lopSVTableView = new QTableWidget(tab);
         lopSVTableView->setObjectName("lopSVTableView");
-        lopSVTableView->setGeometry(QRect(190, 100, 801, 531));
+        lopSVTableView->setGeometry(QRect(190, 100, 1301, 551));
         TabWidget->addTab(tab, QString());
         tab_2 = new QWidget();
         tab_2->setObjectName("tab_2");
@@ -137,7 +139,7 @@ public:
         monHocSearchLineEdit->setGeometry(QRect(190, 30, 481, 41));
         monHocTableView = new QTableWidget(tab_2);
         monHocTableView->setObjectName("monHocTableView");
-        monHocTableView->setGeometry(QRect(190, 100, 801, 531));
+        monHocTableView->setGeometry(QRect(190, 100, 1301, 551));
         TabWidget->addTab(tab_2, QString());
         tab_3 = new QWidget();
         tab_3->setObjectName("tab_3");
@@ -147,9 +149,6 @@ public:
         sinhVienSearchLineEdit = new QLineEdit(tab_3);
         sinhVienSearchLineEdit->setObjectName("sinhVienSearchLineEdit");
         sinhVienSearchLineEdit->setGeometry(QRect(190, 30, 481, 41));
-        sinhVienTableView = new QTableWidget(tab_3);
-        sinhVienTableView->setObjectName("sinhVienTableView");
-        sinhVienTableView->setGeometry(QRect(190, 100, 801, 531));
         editStudentButton = new QPushButton(tab_3);
         editStudentButton->setObjectName("editStudentButton");
         editStudentButton->setGeometry(QRect(0, 170, 161, 41));
@@ -159,6 +158,9 @@ public:
         addStudentButton = new QPushButton(tab_3);
         addStudentButton->setObjectName("addStudentButton");
         addStudentButton->setGeometry(QRect(0, 100, 161, 41));
+        sinhVienTableView = new QTableWidget(tab_3);
+        sinhVienTableView->setObjectName("sinhVienTableView");
+        sinhVienTableView->setGeometry(QRect(190, 100, 1301, 551));
         TabWidget->addTab(tab_3, QString());
         tab_4 = new QWidget();
         tab_4->setObjectName("tab_4");
@@ -179,7 +181,7 @@ public:
         registerStudentButton->setGeometry(QRect(0, 240, 161, 41));
         lopTCSearchLineEdit = new QLineEdit(tab_4);
         lopTCSearchLineEdit->setObjectName("lopTCSearchLineEdit");
-        lopTCSearchLineEdit->setGeometry(QRect(190, 30, 481, 41));
+        lopTCSearchLineEdit->setGeometry(QRect(380, 30, 481, 41));
         listRegisteredStudentsButton = new QPushButton(tab_4);
         listRegisteredStudentsButton->setObjectName("listRegisteredStudentsButton");
         listRegisteredStudentsButton->setGeometry(QRect(0, 380, 161, 41));
@@ -194,23 +196,29 @@ public:
         printTotalScoresButton->setGeometry(QRect(0, 590, 161, 41));
         lopTCTableView = new QTableWidget(tab_4);
         lopTCTableView->setObjectName("lopTCTableView");
-        lopTCTableView->setGeometry(QRect(190, 100, 801, 531));
+        lopTCTableView->setGeometry(QRect(380, 100, 1111, 551));
+        disableCreditClassButton = new QPushButton(tab_4);
+        disableCreditClassButton->setObjectName("disableCreditClassButton");
+        disableCreditClassButton->setGeometry(QRect(190, 28, 161, 41));
+        printCreditClassButton = new QPushButton(tab_4);
+        printCreditClassButton->setObjectName("printCreditClassButton");
+        printCreditClassButton->setGeometry(QRect(190, 100, 161, 41));
         TabWidget->addTab(tab_4, QString());
         label = new QLabel(centralwidget);
         label->setObjectName("label");
-        label->setGeometry(QRect(0, 0, 1041, 81));
+        label->setGeometry(QRect(0, 0, 1531, 81));
         QFont font1;
         font1.setPointSize(30);
         label->setFont(font1);
         label->setScaledContents(false);
         label->setAlignment(Qt::AlignmentFlag::AlignCenter);
         label->setMargin(-3);
-        readFileButton = new QPushButton(centralwidget);
-        readFileButton->setObjectName("readFileButton");
-        readFileButton->setGeometry(QRect(940, 0, 91, 41));
         writeFileButton = new QPushButton(centralwidget);
         writeFileButton->setObjectName("writeFileButton");
-        writeFileButton->setGeometry(QRect(940, 50, 91, 41));
+        writeFileButton->setGeometry(QRect(20, 20, 91, 41));
+        readFileButton = new QPushButton(centralwidget);
+        readFileButton->setObjectName("readFileButton");
+        readFileButton->setGeometry(QRect(120, 20, 91, 41));
         MainWindow->setCentralWidget(centralwidget);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName("statusbar");
@@ -218,7 +226,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        TabWidget->setCurrentIndex(1);
+        TabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -234,14 +242,17 @@ public:
         editClassButton->setText(QCoreApplication::translate("MainWindow", "S\341\273\255a l\341\273\233p SV", nullptr));
         addClassButton->setText(QCoreApplication::translate("MainWindow", "Th\303\252m l\341\273\233p SV", nullptr));
         listSortedStudentsButton->setText(QCoreApplication::translate("MainWindow", "S\341\272\257p x\341\272\277p", nullptr));
+        lopSVSearchLineEdit->setPlaceholderText(QCoreApplication::translate("MainWindow", "L\341\273\233p SV: T\303\254m theo m\303\243 l\341\273\233p, t\303\252n l\341\273\233p. DSSV: T\303\254m theo m\303\243 SV, h\341\273\215 t\303\252n.", nullptr));
         addStudentsButton->setText(QCoreApplication::translate("MainWindow", "Th\303\252m sinh vi\303\252n", nullptr));
         TabWidget->setTabText(TabWidget->indexOf(tab), QCoreApplication::translate("MainWindow", "L\341\273\233p SV", nullptr));
         addSubjectButton->setText(QCoreApplication::translate("MainWindow", "Th\303\252m m\303\264n h\341\273\215c", nullptr));
         editSubjectButton->setText(QCoreApplication::translate("MainWindow", "S\341\273\255a m\303\264n h\341\273\215c", nullptr));
         deleteSubjectButton->setText(QCoreApplication::translate("MainWindow", "X\303\263a m\303\264n h\341\273\215c", nullptr));
         listSubjectsButton->setText(QCoreApplication::translate("MainWindow", "C\341\272\255p nh\341\272\255t DS", nullptr));
+        monHocSearchLineEdit->setPlaceholderText(QCoreApplication::translate("MainWindow", "T\303\254m theo m\303\243 m\303\264n h\341\273\215c, t\303\252n m\303\264n h\341\273\215c", nullptr));
         TabWidget->setTabText(TabWidget->indexOf(tab_2), QCoreApplication::translate("MainWindow", "M\303\264n h\341\273\215c", nullptr));
         listAllStudentsButton->setText(QCoreApplication::translate("MainWindow", "Xem DSSV", nullptr));
+        sinhVienSearchLineEdit->setPlaceholderText(QCoreApplication::translate("MainWindow", "T\303\254m theo m\303\243 sinh vi\303\252n, h\341\273\215, t\303\252n", nullptr));
         editStudentButton->setText(QCoreApplication::translate("MainWindow", "S\341\273\255a SV", nullptr));
         deleteStudentButton->setText(QCoreApplication::translate("MainWindow", "Xo\303\241 SV", nullptr));
         addStudentButton->setText(QCoreApplication::translate("MainWindow", "Th\303\252m SV", nullptr));
@@ -251,14 +262,17 @@ public:
         enterScoresButton->setText(QCoreApplication::translate("MainWindow", "Nh\341\272\255p \304\221i\341\273\203m", nullptr));
         addCreditClassButton->setText(QCoreApplication::translate("MainWindow", "Th\303\252m l\341\273\233p TC", nullptr));
         registerStudentButton->setText(QCoreApplication::translate("MainWindow", "\304\220\304\203ng k\303\255 SV", nullptr));
+        lopTCSearchLineEdit->setPlaceholderText(QCoreApplication::translate("MainWindow", "T\303\254m theo m\303\243 l\341\273\233p TC, m\303\243 MH, t\303\252n MH.", nullptr));
         listRegisteredStudentsButton->setText(QCoreApplication::translate("MainWindow", "Xem SV \304\221\304\203ng k\303\255", nullptr));
         printScoresButton->setText(QCoreApplication::translate("MainWindow", "In \304\221i\341\273\203m", nullptr));
         printAvgScoresButton->setText(QCoreApplication::translate("MainWindow", "In \304\221i\341\273\203m TB", nullptr));
         printTotalScoresButton->setText(QCoreApplication::translate("MainWindow", "In \304\221i\341\273\203m t\341\273\225ng", nullptr));
+        disableCreditClassButton->setText(QCoreApplication::translate("MainWindow", "H\341\273\247y l\341\273\233p TC", nullptr));
+        printCreditClassButton->setText(QCoreApplication::translate("MainWindow", "In l\341\273\233p TC", nullptr));
         TabWidget->setTabText(TabWidget->indexOf(tab_4), QCoreApplication::translate("MainWindow", "L\341\273\233p t\303\255n ch\341\273\211", nullptr));
         label->setText(QCoreApplication::translate("MainWindow", "QU\341\272\242N L\303\215 SINH VI\303\212N", nullptr));
-        readFileButton->setText(QCoreApplication::translate("MainWindow", "\304\220\341\273\215c file", nullptr));
         writeFileButton->setText(QCoreApplication::translate("MainWindow", "Ghi file", nullptr));
+        readFileButton->setText(QCoreApplication::translate("MainWindow", "\304\220\341\273\215c file", nullptr));
     } // retranslateUi
 
 };

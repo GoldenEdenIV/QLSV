@@ -73,7 +73,9 @@ template <> constexpr inline auto MainWindow::qt_create_metaobjectdata<qt_meta_t
         "on_writeFileButton_clicked",
         "on_addStudentButton_clicked",
         "on_editStudentButton_clicked",
-        "on_deleteStudentButton_clicked"
+        "on_deleteStudentButton_clicked",
+        "on_disableCreditClassButton_clicked",
+        "on_printCreditClassButton_clicked"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -151,6 +153,10 @@ template <> constexpr inline auto MainWindow::qt_create_metaobjectdata<qt_meta_t
         QtMocHelpers::SlotData<void()>(34, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'on_deleteStudentButton_clicked'
         QtMocHelpers::SlotData<void()>(35, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'on_disableCreditClassButton_clicked'
+        QtMocHelpers::SlotData<void()>(36, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'on_printCreditClassButton_clicked'
+        QtMocHelpers::SlotData<void()>(37, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -207,6 +213,8 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 30: _t->on_addStudentButton_clicked(); break;
         case 31: _t->on_editStudentButton_clicked(); break;
         case 32: _t->on_deleteStudentButton_clicked(); break;
+        case 33: _t->on_disableCreditClassButton_clicked(); break;
+        case 34: _t->on_printCreditClassButton_clicked(); break;
         default: ;
         }
     }
@@ -231,14 +239,14 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 33)
+        if (_id < 35)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 33;
+        _id -= 35;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 33)
+        if (_id < 35)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 33;
+        _id -= 35;
     }
     return _id;
 }
