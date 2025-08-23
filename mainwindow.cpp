@@ -14,7 +14,13 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->lopSVTableView->setEditTriggers(QAbstractItemView::DoubleClicked);
+    ui->monHocTableView->setEditTriggers(QAbstractItemView::DoubleClicked);
+    ui->sinhVienTableView->setEditTriggers(QAbstractItemView::DoubleClicked);
+    ui->lopTCTableView->setEditTriggers(QAbstractItemView::DoubleClicked);
 }
+
+
 
 MainWindow::~MainWindow()
 {
@@ -351,16 +357,21 @@ void MainWindow::refreshLopSVTable()
     ui->lopSVTableView->setHorizontalHeaderLabels(headers);
 
     for (int i = 0; i < DSLSV.n; i++) {
+        // Column 0 and 1 - editable
         ui->lopSVTableView->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(DSLSV.nodes[i].MALOP)));
         ui->lopSVTableView->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(DSLSV.nodes[i].TENLOP)));
-        ui->lopSVTableView->setItem(i, 2, new QTableWidgetItem(QString::number(DSLSV.nodes[i].SLSV)));
+
+        // Column 2 (SLSV) - read-only
+        QTableWidgetItem *slsvItem = new QTableWidgetItem(QString::number(DSLSV.nodes[i].SLSV));
+        slsvItem->setFlags(slsvItem->flags() & ~Qt::ItemIsEditable);
+        ui->lopSVTableView->setItem(i, 2, slsvItem);
     }
 
     ui->lopSVTableView->resizeColumnsToContents();
-
-    ui->lopSVTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
     ui->lopSVTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    ui->lopSVTableView->setEditTriggers(QAbstractItemView::DoubleClicked |
+                                        QAbstractItemView::EditKeyPressed |
+                                        QAbstractItemView::AnyKeyPressed);
 }
 
 void MainWindow::refreshMonHocTable()
@@ -381,21 +392,28 @@ void MainWindow::refreshMonHocTable()
     }
     ui->monHocTableView->resizeColumnsToContents();
     ui->monHocTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-    ui->monHocTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 void MainWindow::refreshLopTCTable()
 {
+    isShowingScores = false;
+    ui->editCreditClassButton->setEnabled(true);
+    ui->enterScoresButton->setEnabled(false);
+    ui->lopTCTableView->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed | QAbstractItemView::AnyKeyPressed);
     ui->lopTCTableView->clear();
     ui->lopTCTableView->setRowCount(DSLTC.n);
     ui->lopTCTableView->setColumnCount(10);
     QStringList headers;
     headers << "Mã LTC" << "Mã MH" << "Tên MH" << "Niên Khóa" << "Học Kỳ" << "Nhóm" << "Min SV" << "Max SV" << "SLDK" << "Hủy";
     ui->lopTCTableView->setHorizontalHeaderLabels(headers);
+
     for (int i = 0; i < DSLTC.n; i++) {
         LopTC *ltc = DSLTC.nodes[i];
+
+        // Editable columns
         ui->lopTCTableView->setItem(i, 0, new QTableWidgetItem(QString::number(ltc->MALOPTC)));
         ui->lopTCTableView->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(ltc->MAMH)));
+
         NodeMH *node = TimMH_MAMH(DSMH, ltc->MAMH);
         string tenmh = node ? node->mh.TENMH : "";
         ui->lopTCTableView->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(tenmh)));
@@ -404,12 +422,17 @@ void MainWindow::refreshLopTCTable()
         ui->lopTCTableView->setItem(i, 5, new QTableWidgetItem(QString::number(ltc->NHOM)));
         ui->lopTCTableView->setItem(i, 6, new QTableWidgetItem(QString::number(ltc->MINSV)));
         ui->lopTCTableView->setItem(i, 7, new QTableWidgetItem(QString::number(ltc->MAXSV)));
-        ui->lopTCTableView->setItem(i, 8, new QTableWidgetItem(QString::number(ltc->SLSVDK)));
+
+        // Column 8 (SLDK) - read-only
+        QTableWidgetItem *sldkItem = new QTableWidgetItem(QString::number(ltc->SLSVDK));
+        sldkItem->setFlags(sldkItem->flags() & ~Qt::ItemIsEditable);
+        ui->lopTCTableView->setItem(i, 8, sldkItem);
+
         ui->lopTCTableView->setItem(i, 9, new QTableWidgetItem(ltc->HUYLOP ? "Yes" : "No"));
     }
+
     ui->lopTCTableView->resizeColumnsToContents();
     ui->lopTCTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-    ui->lopTCTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 void MainWindow::refreshSinhVienTable()
@@ -446,7 +469,6 @@ void MainWindow::refreshSinhVienTable()
     }
     ui->sinhVienTableView->resizeColumnsToContents();
     ui->sinhVienTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-    ui->sinhVienTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 // Tab lớp sinh viên  =======================================================================
@@ -462,16 +484,35 @@ void MainWindow::on_addClassButton_clicked()
     refreshLopSVTable();
 }
 
-void MainWindow::on_editClassButton_clicked()
-{
-    LopSVAddEditDialog dialog("Sửa Lớp SV", this);
-    dialog.tenLopEdit->setPlaceholderText("Bỏ trống nếu không đổi");
-    if (dialog.exec() != QDialog::Accepted) return;
-    QString maLop = dialog.getMaLop();
-    QString tenLopNew = dialog.getTenLop();
-    std::string result = HieuChinh_LopSV(DSLSV, maLop.toStdString(), tenLopNew.toStdString());
-    QMessageBox::information(this, "Kết Quả", QString::fromStdString(result));
-    refreshLopSVTable();
+void MainWindow::on_editClassButton_clicked() {
+    if (isShowingStudentList) {
+        QMessageBox::information(this, "Info", "Switch to class list view to edit classes.");
+        return;
+    }
+    bool hasError = false;
+    for (int row = 0; row < ui->lopSVTableView->rowCount(); ++row) {
+        QString malopQ = ui->lopSVTableView->item(row, 0)->text();
+        std::string malop = malopQ.toStdString();
+        int idx = Tim_LopSV(DSLSV, malop);
+        if (idx == -1) continue;
+        QString newTenQ = ui->lopSVTableView->item(row, 1)->text().trimmed();
+        std::string newTen = ChuanHoa_InputNangCao(newTenQ.toStdString(), 50, false, true);
+        std::string error;
+        if (newTen.empty()) {
+            error = "Ten lop khong duoc rong cho lop " + malop;
+        }
+        if (!error.empty()) {
+            hasError = true;
+            ui->lopSVTableView->item(row, 1)->setText(QString::fromStdString(DSLSV.nodes[idx].TENLOP));
+            QMessageBox::warning(this, "Loi", QString::fromStdString(error));
+            continue;
+        }
+        DSLSV.nodes[idx].TENLOP = newTen;
+    }
+    if (!hasError) {
+        QMessageBox::information(this, "Thanh cong", "Da luu thay doi cho cac lop!");
+    }
+    refreshLopSVTable(); // Refresh to show updated if needed
 }
 
 void MainWindow::on_deleteClassButton_clicked()
@@ -611,20 +652,40 @@ void MainWindow::on_addSubjectButton_clicked()
     refreshMonHocTable();
 }
 
-void MainWindow::on_editSubjectButton_clicked()
-{
-    MonHocAddEditDialog dialog("Sửa Môn Học", this);
-    dialog.tenmhEdit->setPlaceholderText("Bỏ trống nếu không đổi");
-    dialog.stcltEdit->setPlaceholderText("Bỏ trống nếu không đổi");
-    dialog.stcthEdit->setPlaceholderText("Bỏ trống nếu không đổi");
-    if (dialog.exec() != QDialog::Accepted) return;
-    QString mamh = dialog.getMaMH();
-    QString tenmh_new = dialog.getTenMH();
-    QString stclt_new = dialog.getSTCLT();
-    QString stcth_new = dialog.getSTCTH();
-    string result = HieuChinh_MonHoc(DSMH, mamh.toStdString(), tenmh_new.toStdString(), stclt_new.toStdString(), stcth_new.toStdString());
-    QMessageBox::information(this, "Kết Quả", QString::fromStdString(result));
+void MainWindow::on_editSubjectButton_clicked() {
+    bool hasError = false;
+    for (int row = 0; row < ui->monHocTableView->rowCount(); ++row) {
+        QString mamhQ = ui->monHocTableView->item(row, 0)->text();
+        std::string mamh = mamhQ.toStdString();
+        NodeMH *node = TimMH_MAMH(DSMH, mamh);
+        if (!node) continue;
+        QString newTenQ = ui->monHocTableView->item(row, 1)->text().trimmed();
+        QString newSTCLTQ = ui->monHocTableView->item(row, 2)->text().trimmed();
+        QString newSTCTHQ = ui->monHocTableView->item(row, 3)->text().trimmed();
+        std::string newTen = ChuanHoa_InputNangCao(newTenQ.toStdString(), 50, false, true);
+        std::string stcltS = newSTCLTQ.toStdString();
+        std::string stcthS = newSTCTHQ.toStdString();
+        std::string error;
+        if (newTen.empty()) error += "Ten MH khong duoc rong! ";
+        if (!isNumber(stcltS)) error += "STCLT phai la so! ";
+        if (!isNumber(stcthS)) error += "STCTH phai la so! ";
+        if (!error.empty()) {
+            hasError = true;
+            ui->monHocTableView->item(row, 1)->setText(QString::fromStdString(node->mh.TENMH));
+            ui->monHocTableView->item(row, 2)->setText(QString::number(node->mh.STCLT));
+            ui->monHocTableView->item(row, 3)->setText(QString::number(node->mh.STCTH));
+            QMessageBox::warning(this, "Loi", QString::fromStdString(error + " cho MH " + mamh));
+            continue;
+        }
+        node->mh.TENMH = newTen;
+        node->mh.STCLT = std::stoi(stcltS);
+        node->mh.STCTH = std::stoi(stcthS);
+    }
+    if (!hasError) {
+        QMessageBox::information(this, "Thanh cong", "Da luu thay doi cho cac mon hoc!");
+    }
     refreshMonHocTable();
+    refreshLopTCTable(); // Since TENMH may change
 }
 
 void MainWindow::on_deleteSubjectButton_clicked()
@@ -689,74 +750,50 @@ void MainWindow::on_addStudentButton_clicked()
 
 void MainWindow::on_editStudentButton_clicked()
 {
-    StudentAddEditDialog dialog("Sửa Sinh Viên", this);
-    dialog.maLopEdit->setPlaceholderText("Bỏ trống nếu không đổi");
-    dialog.hoEdit->setPlaceholderText("Bỏ trống nếu không đổi");
-    dialog.tenEdit->setPlaceholderText("Bỏ trống nếu không đổi");
-    dialog.gioitinhEdit->setPlaceholderText("Bỏ trống nếu không đổi");
-    dialog.sodtEdit->setPlaceholderText("Bỏ trống nếu không đổi");
-    dialog.emailEdit->setPlaceholderText("Bỏ trống nếu không đổi");
-    if (dialog.exec() != QDialog::Accepted) return;
-    QString masv = dialog.getMaSV();
-    PTRSV p = SearchSV_MASV(DSLSV, masv.toStdString());
-    if (p == NULL) {
-        QMessageBox::warning(this, "Lỗi", "Không tìm thấy sinh viên");
-        return;
+    bool hasError = false;
+    for (int row = 0; row < ui->sinhVienTableView->rowCount(); ++row) {
+        QString masvQ = ui->sinhVienTableView->item(row, 0)->text();
+        std::string masv = masvQ.toStdString();
+        PTRSV sv = SearchSV_MASV(DSLSV, masv);
+        if (!sv) continue;
+        QString newHoQ = ui->sinhVienTableView->item(row, 1)->text().trimmed();
+        QString newTenQ = ui->sinhVienTableView->item(row, 2)->text().trimmed();
+        QString newGtQ = ui->sinhVienTableView->item(row, 3)->text().trimmed();
+        QString newSdtQ = ui->sinhVienTableView->item(row, 4)->text().trimmed();
+        QString newEmailQ = ui->sinhVienTableView->item(row, 5)->text().trimmed();
+        std::string newHo = ChuanHoa_InputNangCao(newHoQ.toStdString(), 50, false, true);
+        std::string newTen = ChuanHoa_InputNangCao(newTenQ.toStdString(), 10, false, true);
+        std::string newGt = ChuanHoa_InputNangCao(newGtQ.toStdString(), 3, false, true);
+        std::string newSdt = ChuanHoa_Chuoi(newSdtQ.toStdString(), 10);
+        std::string newEmail = ChuanHoa_Chuoi(newEmailQ.toStdString(), 50);
+        std::string error;
+        if (newHo.empty()) error += "Ho khong duoc rong! ";
+        if (newTen.empty()) error += "Ten khong duoc rong! ";
+        if (newGt != "Nam" && newGt != "Nu") error += "Gioi tinh phai la Nam hoac Nu! ";
+        if (!KiemTra_SDT(newSdt)) error += "So dien thoai khong hop le! ";
+        if (!KiemTra_Email(newEmail)) error += "Email khong hop le! ";
+        if (!error.empty()) {
+            hasError = true;
+            ui->sinhVienTableView->item(row, 1)->setText(QString::fromStdString(sv->sv.HO));
+            ui->sinhVienTableView->item(row, 2)->setText(QString::fromStdString(sv->sv.TEN));
+            ui->sinhVienTableView->item(row, 3)->setText(QString::fromStdString(sv->sv.GIOITINH));
+            ui->sinhVienTableView->item(row, 4)->setText(QString::fromStdString(sv->sv.SODT));
+            ui->sinhVienTableView->item(row, 5)->setText(QString::fromStdString(sv->sv.EMAIL));
+            QMessageBox::warning(this, "Loi", QString::fromStdString(error + " cho SV " + masv));
+            continue;
+        }
+        sv->sv.HO = newHo;
+        sv->sv.TEN = newTen;
+        sv->sv.GIOITINH = newGt;
+        sv->sv.SODT = newSdt;
+        sv->sv.EMAIL = newEmail;
     }
-    QString ho_new = dialog.getHo();
-    if (!ho_new.isEmpty()) p->sv.HO = ho_new.toStdString();
-    QString ten_new = dialog.getTen();
-    if (!ten_new.isEmpty()) p->sv.TEN = ten_new.toStdString();
-    QString gioitinh_new = dialog.getGioiTinh();
-    if (!gioitinh_new.isEmpty()) p->sv.GIOITINH = gioitinh_new.toStdString();
-    QString sdt_new = dialog.getSoDT();
-    if (!sdt_new.isEmpty()) p->sv.SODT = sdt_new.toStdString();
-    QString email_new = dialog.getEmail();
-    if (!email_new.isEmpty()) p->sv.EMAIL = email_new.toStdString();
-    QString malop_new = dialog.getMaLop();
-    if (!malop_new.isEmpty()) {
-        // Move to new class if different
-        int new_idx = Tim_LopSV(DSLSV, malop_new.toStdString());
-        if (new_idx == -1) {
-            QMessageBox::warning(this, "Lỗi", "Không tìm thấy lớp mới");
-            return;
-        }
-        // Find original index
-        int orig_idx = -1;
-        for (int i = 0; i < DSLSV.n; i++) {
-            PTRSV q = DSLSV.nodes[i].FirstSV;
-            while (q) {
-                if (q == p) {
-                    orig_idx = i;
-                    break;
-                }
-                q = q->next;
-            }
-            if (orig_idx != -1) break;
-        }
-        if (orig_idx != -1 && orig_idx != new_idx) {
-            // Remove from original
-            PTRSV prev = NULL;
-            PTRSV q = DSLSV.nodes[orig_idx].FirstSV;
-            while (q != p) {
-                prev = q;
-                q = q->next;
-            }
-            if (prev == NULL) {
-                DSLSV.nodes[orig_idx].FirstSV = p->next;
-            } else {
-                prev->next = p->next;
-            }
-            DSLSV.nodes[orig_idx].SLSV--;
-            // Add to new
-            p->next = DSLSV.nodes[new_idx].FirstSV;
-            DSLSV.nodes[new_idx].FirstSV = p;
-            DSLSV.nodes[new_idx].SLSV++;
-        }
+    if (!hasError) {
+        QMessageBox::information(this, "Thanh cong", "Da luu thay doi cho cac sinh vien!");
     }
-    QMessageBox::information(this, "Kết Quả", "Sửa sinh viên thành công");
-    refreshLopSVTable();
-    on_listAllStudentsButton_clicked();
+    refreshSinhVienTable();
+    // Optionally refresh lopSVTableView if isShowingStudentList
+    if (isShowingStudentList) refreshLopSVTable();
 }
 
 void MainWindow::on_deleteStudentButton_clicked()
@@ -824,29 +861,110 @@ void MainWindow::on_addCreditClassButton_clicked()
 
 void MainWindow::on_editCreditClassButton_clicked()
 {
-    LopTCEditDialog dialog("Sửa Lớp TC", this);
-    if (dialog.exec() != QDialog::Accepted) return;
-    QString mltc_str = dialog.getMaLTC();
-    int mltc = mltc_str.toInt();
-    LopTC *ltc = SearchLopTC_MALTC(DSLTC, mltc);
-    if (!ltc) {
-        QMessageBox::warning(this, "Lỗi", "Không tìm thấy lớp TC");
-        return;
+    bool hasError = false;
+    for (int row = 0; row < ui->lopTCTableView->rowCount(); ++row) {
+        QString mltcQ = ui->lopTCTableView->item(row, 0)->text();
+        int mltc = mltcQ.toInt();
+        LopTC *ltc = SearchLopTC_MALTC(DSLTC, mltc);
+        if (!ltc) continue;
+
+        // Get all field values from the table
+        QString newMamhQ = ui->lopTCTableView->item(row, 1)->text().trimmed();
+        QString newNkQ = ui->lopTCTableView->item(row, 3)->text().trimmed();
+        QString newHkQ = ui->lopTCTableView->item(row, 4)->text().trimmed();
+        QString newNhomQ = ui->lopTCTableView->item(row, 5)->text().trimmed();
+        QString newMinQ = ui->lopTCTableView->item(row, 6)->text().trimmed();
+        QString newMaxQ = ui->lopTCTableView->item(row, 7)->text().trimmed();
+        QString newHuyQ = ui->lopTCTableView->item(row, 9)->text().trimmed();
+
+        // Process the values
+        std::string newMamh = ChuanHoa_InputNangCao(newMamhQ.toStdString(), 10, true, false);
+        std::string newNk = ChuanHoa_Chuoi(newNkQ.toStdString(), 9);
+        std::string newHkS = newHkQ.toStdString();
+        std::string newNhomS = newNhomQ.toStdString();
+        std::string newMinS = newMinQ.toStdString();
+        std::string newMaxS = newMaxQ.toStdString();
+        std::string newHuyLow = newHuyQ.toLower().toStdString();
+        bool newHuy = (newHuyLow == "yes");
+
+        std::string error;
+
+        // Validate MAMH
+        if (newMamh.empty() || !KiemTra_ChuaChuVaSo(newMamh)) {
+            error += "Ma MH khong hop le! ";
+        } else if (Search_MH(DSMH, newMamh) == NULL) {
+            error += "Mon hoc khong ton tai! ";
+        }
+
+        // Validate HOCKY
+        if (!isNumber(newHkS)) {
+            error += "Hoc ky phai la so! ";
+        } else {
+            int val = std::stoi(newHkS);
+            if (val < 1 || val > 10) error += "Hoc ky tu 1 den 10! ";
+        }
+
+        // Validate NHOM
+        if (!isNumber(newNhomS)) {
+            error += "Nhom phai la so! ";
+        } else {
+            int val = std::stoi(newNhomS);
+            if (val < 1) error += "Nhom phai lon hon 0! ";
+        }
+
+        // Validate MinSV
+        int minValue = 0;
+        if (!isNumber(newMinS)) {
+            error += "MinSV phai la so! ";
+        } else {
+            minValue = std::stoi(newMinS);
+            if (minValue < 1) error += "MinSV phai lon hon 0! ";
+        }
+
+        // Validate MaxSV
+        if (!isNumber(newMaxS)) {
+            error += "MaxSV phai la so! ";
+        } else {
+            int maxValue = std::stoi(newMaxS);
+            // Only check MinSV vs MaxSV if MinSV is valid
+            if (isNumber(newMinS) && maxValue < minValue) {
+                error += "MaxSV phai >= MinSV! ";
+            }
+        }
+
+        // Validate HUYLOP
+        if (newHuyLow != "yes" && newHuyLow != "no") {
+            error += "Huy lop phai la Yes hoac No! ";
+        }
+
+        // If there's an error, revert to original values and show error
+        if (!error.empty()) {
+            hasError = true;
+            ui->lopTCTableView->item(row, 1)->setText(QString::fromStdString(ltc->MAMH));
+            ui->lopTCTableView->item(row, 3)->setText(QString::fromStdString(ltc->NIENKHOA));
+            ui->lopTCTableView->item(row, 4)->setText(QString::number(ltc->HOCKY));
+            ui->lopTCTableView->item(row, 5)->setText(QString::number(ltc->NHOM));
+            ui->lopTCTableView->item(row, 6)->setText(QString::number(ltc->MINSV));
+            ui->lopTCTableView->item(row, 7)->setText(QString::number(ltc->MAXSV));
+            ui->lopTCTableView->item(row, 9)->setText(ltc->HUYLOP ? "Yes" : "No");
+            QMessageBox::warning(this, "Loi", QString::fromStdString(error + " cho LTC " + std::to_string(mltc)));
+            continue;
+        }
+
+        // Update the LopTC object with new values
+        ltc->MAMH = newMamh;
+        ltc->NIENKHOA = newNk;
+        ltc->HOCKY = std::stoi(newHkS);
+        ltc->NHOM = std::stoi(newNhomS);
+        ltc->MINSV = std::stoi(newMinS);
+        ltc->MAXSV = std::stoi(newMaxS);
+        ltc->HUYLOP = newHuy;
     }
-    QString mamh_new = dialog.getMaMH();
-    QString nienkhoa_new = dialog.getNienKhoa();
-    QString hocky_new_str = dialog.getHocKy();
-    int hocky_new = hocky_new_str.isEmpty() ? ltc->HOCKY : hocky_new_str.toInt();
-    QString nhom_new_str = dialog.getNhom();
-    int nhom_new = nhom_new_str.isEmpty() ? ltc->NHOM : nhom_new_str.toInt();
-    QString minsv_new_str = dialog.getMinSV();
-    int minsv_new = minsv_new_str.isEmpty() ? ltc->MINSV : minsv_new_str.toInt();
-    QString maxsv_new_str = dialog.getMaxSV();
-    int maxsv_new = maxsv_new_str.isEmpty() ? ltc->MAXSV : maxsv_new_str.toInt();
-    QString huylop_new_str = dialog.getHuyLop().toLower();
-    bool huylop_new = huylop_new_str.isEmpty() ? ltc->HUYLOP : (huylop_new_str == "yes");
-    string result = HieuChinh_LopTC(DSLTC, mltc, mamh_new.toStdString(), nienkhoa_new.toStdString(), hocky_new, nhom_new, minsv_new, maxsv_new, huylop_new);
-    QMessageBox::information(this, "Kết Quả", QString::fromStdString(result));
+
+    if (!hasError) {
+        QMessageBox::information(this, "Thanh cong", "Da luu thay doi cho cac lop TC!");
+    }
+
     refreshLopTCTable();
 }
 
@@ -948,54 +1066,59 @@ void MainWindow::on_registerStudentButton_clicked()
 
 void MainWindow::on_enterScoresButton_clicked()
 {
-    LopTCInputDialog dialog("Nhập Điểm Lớp TC", this);
-    if (dialog.exec() != QDialog::Accepted) return;
-    QString mamh = dialog.getMaMH();
-    QString nienkhoa = dialog.getNienKhoa();
-    int hocky = dialog.getHocKy();
-    int nhom = dialog.getNhom();
-
-    LopTC *ltc = SearchLopTC(DSLTC, mamh.toStdString(), nienkhoa.toStdString(), hocky, nhom);
-    if (!ltc) {
-        QMessageBox::warning(this, "Lỗi", "Không tìm thấy lớp TC");
+    if (!isShowingScores) {
+        QMessageBox::warning(this, "Lỗi", "Vui lòng chọn lớp TC trước để nhập điểm.");
         return;
     }
 
+    // Collect scores from the table
+    int rowCount = ui->lopTCTableView->rowCount();
+    CustomPair *diem_list = new CustomPair[rowCount];
     int diem_size = 0;
-    PTRDK p = ltc->DSDK;
-    while (p) {
-        diem_size++;
-        p = p->next;
-    }
+    bool valid = true;
 
-    CustomPair* diem_list = new CustomPair[diem_size];
-    int index = 0;
+    for (int row = 0; row < rowCount; ++row) {
+        QTableWidgetItem *masvItem = ui->lopTCTableView->item(row, 0); // column 0 for MASV
+        QTableWidgetItem *diemItem = ui->lopTCTableView->item(row, 6); // column 6 for DIEM (now last column)
 
-    p = ltc->DSDK;
-    bool ok;
-    while (p) {
-        QString masv_qs = QString::fromStdString(p->dk.MASV);
-        float diem = QInputDialog::getDouble(this, "Nhập Điểm", "Nhập điểm cho SV " + masv_qs + ":", p->dk.DIEM, 0, 10, 1, &ok);
-        if (!ok) {
-            delete[] diem_list;
-            return;
+        if (masvItem && diemItem) {
+            std::string masv = masvItem->text().toStdString();
+            QString diemStr = diemItem->text();
+            bool ok;
+            float diem = diemStr.toFloat(&ok);
+
+            if (!ok || diem < 0 || diem > 10) {
+                QMessageBox::warning(this, "Lỗi", QString("Điểm không hợp lệ tại dòng %1 (MASV: %2). Điểm phải từ 0-10.")
+                                                      .arg(row + 1).arg(QString::fromStdString(masv)));
+                valid = false;
+                break;
+            }
+
+            diem_list[diem_size].masv = masv;
+            diem_list[diem_size].diem = diem;
+            diem_size++;
         }
-
-        diem_list[index].masv = p->dk.MASV;
-        diem_list[index].diem = diem;
-        index++;
-        p = p->next;
     }
 
-    string result = NhapDiem_LopTC(DSLTC, DSMH, DSLSV, mamh.toStdString(), nienkhoa.toStdString(), hocky, nhom, diem_list, diem_size);
+    if (!valid) {
+        delete[] diem_list;
+        return;
+    }
 
+    // Save to database using NhapDiem_LopTC
+    std::string result = NhapDiem_LopTC(DSLTC, DSMH, DSLSV, current_mamh, current_nienkhoa, current_hocky, current_nhom, diem_list, diem_size);
+    QMessageBox::information(this, "Kết Quả", QString::fromStdString(result));
     delete[] diem_list;
 
-    QMessageBox::information(this, "Kết Quả", QString::fromStdString(result));
+    // Refresh the table after saving - just update the scores column
+    refreshScoresInTable();
 }
 
 void MainWindow::on_listRegisteredStudentsButton_clicked()
 {
+    ui->editCreditClassButton->setEnabled(false);
+    ui->enterScoresButton->setEnabled(false);
+
     LopTCInputDialog dialog("Danh Sách SV ĐK Lớp TC", this);
     if (dialog.exec() != QDialog::Accepted) return;
 
@@ -1010,75 +1133,270 @@ void MainWindow::on_listRegisteredStudentsButton_clicked()
         return;
     }
 
-    // Clear and set up lopTCTableView for registered students
+    // Store current identifiers for later use in saving scores
+    current_mamh = mamh.toStdString();
+    current_nienkhoa = nienkhoa.toStdString();
+    current_hocky = hocky;
+    current_nhom = nhom;
+
+    // Set flag to enable score entry
+    isShowingScores = true;
+    ui->enterScoresButton->setEnabled(true);
+
+    // Clear and set up lopTCTableView for registered students with scores
     ui->lopTCTableView->clear();
     ui->lopTCTableView->setRowCount(0);
-    ui->lopTCTableView->setColumnCount(6);
-    QStringList headers = {"MASV", "Họ", "Tên", "Giới Tính", "SĐT", "Email"};
+    ui->lopTCTableView->setColumnCount(7); // Added one more column for DIEM
+    QStringList headers = {"MASV", "Họ", "Tên", "Giới Tính", "SĐT", "Email", "ĐIỂM"};
     ui->lopTCTableView->setHorizontalHeaderLabels(headers);
 
+    // Get existing scores for this class
+    CustomPair *existingScores = nullptr;
+    int existingScoresSize = 0;
+
+    std::string scoresResult = InBangDiem_LopTC(DSLTC, DSMH, DSLSV, current_mamh, current_nienkhoa, current_hocky, current_nhom);
+
+    // Parse existing scores if available
+    if (scoresResult.find("Khong ton tai") == std::string::npos) {
+        QStringList lines = QString::fromStdString(scoresResult).split("\n");
+        bool dataStarted = false;
+
+        // Count valid score lines first
+        int scoreCount = 0;
+        for (const QString &line : lines) {
+            if (line.contains("STT")) {
+                dataStarted = true;
+                continue;
+            }
+            if (dataStarted && !line.trimmed().isEmpty() && !line.contains("---")) {
+                QStringList parts = line.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
+                if (parts.size() >= 4) {
+                    scoreCount++;
+                }
+            }
+        }
+
+        // Allocate array for existing scores
+        if (scoreCount > 0) {
+            existingScores = new CustomPair[scoreCount];
+            existingScoresSize = 0;
+            dataStarted = false;
+
+            for (const QString &line : lines) {
+                if (line.contains("STT")) {
+                    dataStarted = true;
+                    continue;
+                }
+
+                if (dataStarted && !line.trimmed().isEmpty() && !line.contains("---")) {
+                    QStringList parts = line.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
+                    if (parts.size() >= 4) {
+                        std::string masv = parts[1].toStdString();
+                        QString diemStr = parts.last();
+                        bool ok;
+                        float diem = diemStr.toFloat(&ok);
+                        if (ok) {
+                            existingScores[existingScoresSize].masv = masv;
+                            existingScores[existingScoresSize].diem = diem;
+                            existingScoresSize++;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Helper function to find score by MASV
+    auto findScore = [existingScores, existingScoresSize](const std::string& masv) -> float {
+        for (int i = 0; i < existingScoresSize; i++) {
+            if (existingScores[i].masv == masv) {
+                return existingScores[i].diem;
+            }
+        }
+        return -1.0f; // Not found
+    };
+
+    // Populate table with student info and scores
     int row = 0;
     PTRDK p = ltc->DSDK;
     while (p) {
         PTRSV sv = SearchSV_MASV(DSLSV, p->dk.MASV);
         if (sv) {
             ui->lopTCTableView->insertRow(row);
-            ui->lopTCTableView->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(sv->sv.MASV)));
-            ui->lopTCTableView->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(sv->sv.HO)));
-            ui->lopTCTableView->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(sv->sv.TEN)));
-            ui->lopTCTableView->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(sv->sv.GIOITINH)));
-            ui->lopTCTableView->setItem(row, 4, new QTableWidgetItem(QString::fromStdString(sv->sv.SODT)));
-            ui->lopTCTableView->setItem(row, 5, new QTableWidgetItem(QString::fromStdString(sv->sv.EMAIL)));
+
+            // MASV (non-editable)
+            QTableWidgetItem *masvItem = new QTableWidgetItem(QString::fromStdString(sv->sv.MASV));
+            masvItem->setFlags(masvItem->flags() & ~Qt::ItemIsEditable);
+            ui->lopTCTableView->setItem(row, 0, masvItem);
+
+            // HO (non-editable)
+            QTableWidgetItem *hoItem = new QTableWidgetItem(QString::fromStdString(sv->sv.HO));
+            hoItem->setFlags(hoItem->flags() & ~Qt::ItemIsEditable);
+            ui->lopTCTableView->setItem(row, 1, hoItem);
+
+            // TEN (non-editable)
+            QTableWidgetItem *tenItem = new QTableWidgetItem(QString::fromStdString(sv->sv.TEN));
+            tenItem->setFlags(tenItem->flags() & ~Qt::ItemIsEditable);
+            ui->lopTCTableView->setItem(row, 2, tenItem);
+
+            // GIOITINH (non-editable)
+            QTableWidgetItem *gioitinhItem = new QTableWidgetItem(QString::fromStdString(sv->sv.GIOITINH));
+            gioitinhItem->setFlags(gioitinhItem->flags() & ~Qt::ItemIsEditable);
+            ui->lopTCTableView->setItem(row, 3, gioitinhItem);
+
+            // SODT (non-editable)
+            QTableWidgetItem *sodtItem = new QTableWidgetItem(QString::fromStdString(sv->sv.SODT));
+            sodtItem->setFlags(sodtItem->flags() & ~Qt::ItemIsEditable);
+            ui->lopTCTableView->setItem(row, 4, sodtItem);
+
+            // EMAIL (non-editable)
+            QTableWidgetItem *emailItem = new QTableWidgetItem(QString::fromStdString(sv->sv.EMAIL));
+            emailItem->setFlags(emailItem->flags() & ~Qt::ItemIsEditable);
+            ui->lopTCTableView->setItem(row, 5, emailItem);
+
+            // DIEM (editable)
+            QString diemText = "";
+            float existingScore = findScore(sv->sv.MASV);
+            if (existingScore >= 0) {
+                diemText = QString::number(existingScore);
+            }
+            QTableWidgetItem *diemItem = new QTableWidgetItem(diemText);
+            diemItem->setFlags(diemItem->flags() | Qt::ItemIsEditable);
+            ui->lopTCTableView->setItem(row, 6, diemItem);
+
             row++;
         }
         p = p->next;
     }
+
+    // Clean up allocated memory
+    if (existingScores) {
+        delete[] existingScores;
+    }
+
+    // Set table properties
     ui->lopTCTableView->resizeColumnsToContents();
     ui->lopTCTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-    ui->lopTCTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->lopTCTableView->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed | QAbstractItemView::AnyKeyPressed);
 }
 
-void MainWindow::on_printScoresButton_clicked()
+void MainWindow::refreshScoresInTable()
 {
-    LopTCInputDialog dialog("In Bảng Điểm Lớp TC", this);
-    if (dialog.exec() != QDialog::Accepted) return;
+    // Get updated scores
+    std::string scoresResult = InBangDiem_LopTC(DSLTC, DSMH, DSLSV, current_mamh, current_nienkhoa, current_hocky, current_nhom);
 
-    QString mamh = dialog.getMaMH();
-    QString nienkhoa = dialog.getNienKhoa();
-    int hocky = dialog.getHocKy();
-    int nhom = dialog.getNhom();
-
-    LopTC *ltc = SearchLopTC(DSLTC, mamh.toStdString(), nienkhoa.toStdString(), hocky, nhom);
-    if (!ltc) {
-        QMessageBox::warning(this, "Lỗi", "Không tìm thấy lớp TC");
-        return;
+    if (scoresResult.find("Khong ton tai") != std::string::npos) {
+        return; // No scores to update
     }
 
-    // Clear and set up lopTCTableView for scores
-    ui->lopTCTableView->clear();
-    ui->lopTCTableView->setRowCount(0);
-    ui->lopTCTableView->setColumnCount(3);
-    QStringList headers = {"MASV", "Họ Tên", "Điểm"};
-    ui->lopTCTableView->setHorizontalHeaderLabels(headers);
+    // Parse updated scores
+    QStringList lines = QString::fromStdString(scoresResult).split("\n");
+    bool dataStarted = false;
 
-    int row = 0;
-    PTRDK p = ltc->DSDK;
-    while (p) {
-        PTRSV sv = SearchSV_MASV(DSLSV, p->dk.MASV);
-        if (sv) {
-            ui->lopTCTableView->insertRow(row);
-            ui->lopTCTableView->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(sv->sv.MASV)));
-            QString hoten = QString::fromStdString(sv->sv.HO) + " " + QString::fromStdString(sv->sv.TEN);
-            ui->lopTCTableView->setItem(row, 1, new QTableWidgetItem(hoten));
-            ui->lopTCTableView->setItem(row, 2, new QTableWidgetItem(QString::number(p->dk.DIEM, 'f', 1)));
-            row++;
+    // Count valid score lines first
+    int scoreCount = 0;
+    for (const QString &line : lines) {
+        if (line.contains("STT")) {
+            dataStarted = true;
+            continue;
         }
-        p = p->next;
+        if (dataStarted && !line.trimmed().isEmpty() && !line.contains("---")) {
+            QStringList parts = line.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
+            if (parts.size() >= 4) {
+                scoreCount++;
+            }
+        }
     }
-    ui->lopTCTableView->resizeColumnsToContents();
-    ui->lopTCTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-    ui->lopTCTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    // Allocate array for updated scores
+    CustomPair *updatedScores = nullptr;
+    int updatedScoresSize = 0;
+
+    if (scoreCount > 0) {
+        updatedScores = new CustomPair[scoreCount];
+        updatedScoresSize = 0;
+        dataStarted = false;
+
+        for (const QString &line : lines) {
+            if (line.contains("STT")) {
+                dataStarted = true;
+                continue;
+            }
+
+            if (dataStarted && !line.trimmed().isEmpty() && !line.contains("---")) {
+                QStringList parts = line.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
+                if (parts.size() >= 4) {
+                    std::string masv = parts[1].toStdString();
+                    QString diemStr = parts.last();
+                    bool ok;
+                    float diem = diemStr.toFloat(&ok);
+                    if (ok) {
+                        updatedScores[updatedScoresSize].masv = masv;
+                        updatedScores[updatedScoresSize].diem = diem;
+                        updatedScoresSize++;
+                    }
+                }
+            }
+        }
+    }
+
+    // Helper function to find score by MASV
+    auto findUpdatedScore = [updatedScores, updatedScoresSize](const std::string& masv) -> float {
+        for (int i = 0; i < updatedScoresSize; i++) {
+            if (updatedScores[i].masv == masv) {
+                return updatedScores[i].diem;
+            }
+        }
+        return -1.0f; // Not found
+    };
+
+    // Update the DIEM column in the table
+    int rowCount = ui->lopTCTableView->rowCount();
+    for (int row = 0; row < rowCount; ++row) {
+        QTableWidgetItem *masvItem = ui->lopTCTableView->item(row, 0);
+        if (masvItem) {
+            std::string masv = masvItem->text().toStdString();
+            float updatedScore = findUpdatedScore(masv);
+            if (updatedScore >= 0) {
+                QTableWidgetItem *diemItem = ui->lopTCTableView->item(row, 6);
+                if (diemItem) {
+                    diemItem->setText(QString::number(updatedScore));
+                }
+            }
+        }
+    }
+
+    // Clean up allocated memory
+    if (updatedScores) {
+        delete[] updatedScores;
+    }
 }
+
+// void MainWindow::on_printScoresButton_clicked()
+// {
+//     ui->editCreditClassButton->setEnabled(false);
+//     ui->enterScoresButton->setEnabled(true);
+
+//     LopTCInputDialog dialog("In Bảng Điểm Lớp TC", this);
+//     if (dialog.exec() != QDialog::Accepted) return;
+
+//     std::string mamh = dialog.getMaMH().toStdString();
+//     std::string nienkhoa = dialog.getNienKhoa().toStdString();
+//     int hocky = dialog.getHocKy();
+//     int nhom = dialog.getNhom();
+
+//     // Store current identifiers for later use in saving
+//     current_mamh = mamh;
+//     current_nienkhoa = nienkhoa;
+//     current_hocky = hocky;
+//     current_nhom = nhom;
+
+//     // Set flag
+//     isShowingScores = true;
+
+//     // Populate the table
+//     populateScoresTable();
+// }
 
 void MainWindow::on_printAvgScoresButton_clicked()
 {
@@ -1121,14 +1439,12 @@ void MainWindow::on_printTotalScoresButton_clicked()
 {
     MalopInputDialog dialog("In Điểm Tổng Kết Lớp SV", this);
     if (dialog.exec() != QDialog::Accepted) return;
-
     QString malop = dialog.getMaLop();
     int idx = Tim_LopSV(DSLSV, malop.toStdString());
     if (idx == -1) {
         QMessageBox::warning(this, "Lỗi", "Không tìm thấy lớp");
         return;
     }
-
     string danhSachMaMH[MAX_LOPTC];
     int numMH = 0;
     for (int j = 0; j < DSLTC.n; j++) {
@@ -1146,27 +1462,22 @@ void MainWindow::on_printTotalScoresButton_clicked()
             }
         }
     }
-
     ui->lopTCTableView->clear();
     ui->lopTCTableView->setRowCount(0);
-    int colCount = 4 + numMH; // STT, MASV, HO, TEN + each MH
+    int colCount = 3 + numMH; // MASV, HO, TEN + each MH
     ui->lopTCTableView->setColumnCount(colCount);
-    QStringList headers = {"STT", "MASV", "Họ", "Tên"};
+    QStringList headers = {"MASV", "Họ", "Tên"};
     for (int k = 0; k < numMH; k++) {
         headers << QString::fromStdString(danhSachMaMH[k]);
     }
     ui->lopTCTableView->setHorizontalHeaderLabels(headers);
-
     int row = 0;
-    int stt = 1;
     PTRSV p = DSLSV.nodes[idx].FirstSV;
     while (p) {
         ui->lopTCTableView->insertRow(row);
-        ui->lopTCTableView->setItem(row, 0, new QTableWidgetItem(QString::number(stt)));
-        ui->lopTCTableView->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(p->sv.MASV)));
-        ui->lopTCTableView->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(p->sv.HO)));
-        ui->lopTCTableView->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(p->sv.TEN)));
-
+        ui->lopTCTableView->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(p->sv.MASV)));
+        ui->lopTCTableView->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(p->sv.HO)));
+        ui->lopTCTableView->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(p->sv.TEN)));
         for (int k = 0; k < numMH; ++k) {
             float diem = -1;
             bool timThay = false;
@@ -1185,10 +1496,9 @@ void MainWindow::on_printTotalScoresButton_clicked()
                 }
             }
             QString diemStr = (timThay && diem >= 0) ? QString::number(diem, 'f', 0) : "";
-            ui->lopTCTableView->setItem(row, 4 + k, new QTableWidgetItem(diemStr));
+            ui->lopTCTableView->setItem(row, 3 + k, new QTableWidgetItem(diemStr));
         }
         row++;
-        stt++;
         p = p->next;
     }
     ui->lopTCTableView->resizeColumnsToContents();
@@ -1380,4 +1690,5 @@ void MainWindow::on_printCreditClassButton_clicked()
 {
     refreshLopTCTable();
 }
+
 

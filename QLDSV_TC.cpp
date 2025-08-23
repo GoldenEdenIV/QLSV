@@ -17,7 +17,7 @@ Xoa_SV_LopSV(nodes[i].FirstSV);
 }
 delete[] nodes;
 }
-string ChuanHoa_Chuoi(string &chuoi, int dodai)
+string ChuanHoa_Chuoi(const string &chuoi, int dodai)
 {
     size_t start = 0;
     while (start < chuoi.length() && isspace(static_cast<unsigned char>(chuoi[start])))

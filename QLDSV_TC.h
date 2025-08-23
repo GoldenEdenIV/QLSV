@@ -104,7 +104,7 @@ struct CustomPair {
 };
 
 // Utility functions
-string ChuanHoa_Chuoi(string &chuoi, int dodai);
+string ChuanHoa_Chuoi(const string &chuoi, int dodai);
 string ChuanHoa_InputNangCao(string chuoi, int dodai, bool toUpper = false, bool vietHoaDau = false);
 bool KiemTra_SDT(string sdt);
 bool KiemTra_Email(string email);

@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <qtablewidget.h>
 #include "QLDSV_TC.h"
 
 QT_BEGIN_NAMESPACE
@@ -89,6 +90,7 @@ private slots:
 
     void on_printCreditClassButton_clicked();
 
+    void refreshScoresInTable();
 private:
     Ui::MainWindow *ui;
     DSLopTC DSLTC;
@@ -96,5 +98,10 @@ private:
     DSLopSV DSLSV;
     PTRSV FirstSV = NULL;
     bool isShowingStudentList = false;
+    std::string current_mamh;
+    std::string current_nienkhoa;
+    int current_hocky;
+    int current_nhom;
+    bool isShowingScores = false;
 };
 #endif // MAINWINDOW_H

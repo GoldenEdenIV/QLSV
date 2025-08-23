@@ -38,7 +38,7 @@
      <enum>QTabWidget::TabPosition::North</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
     <property name="elideMode">
      <enum>Qt::TextElideMode::ElideNone</enum>
@@ -51,7 +51,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>240</y>
+        <y>380</y>
         <width>161</width>
         <height>41</height>
        </rect>
@@ -77,20 +77,20 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>100</y>
+        <y>30</y>
         <width>161</width>
         <height>41</height>
        </rect>
       </property>
       <property name="text">
-       <string>Sửa lớp SV</string>
+       <string>Cập nhật lớp SV</string>
       </property>
      </widget>
      <widget class="QPushButton" name="addClassButton">
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>30</y>
+        <y>100</y>
         <width>161</width>
         <height>41</height>
        </rect>
@@ -103,7 +103,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>310</y>
+        <y>240</y>
         <width>161</width>
         <height>41</height>
        </rect>
@@ -129,7 +129,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>380</y>
+        <y>310</y>
         <width>161</width>
         <height>41</height>
        </rect>
@@ -157,7 +157,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>30</y>
+        <y>100</y>
         <width>161</width>
         <height>41</height>
        </rect>
@@ -170,13 +170,13 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>100</y>
+        <y>30</y>
         <width>161</width>
         <height>41</height>
        </rect>
       </property>
       <property name="text">
-       <string>Sửa môn học</string>
+       <string>Cập nhật MH</string>
       </property>
      </widget>
      <widget class="QPushButton" name="deleteSubjectButton">
@@ -190,19 +190,6 @@
       </property>
       <property name="text">
        <string>Xóa môn học</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="listSubjectsButton">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>240</y>
-        <width>161</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Cập nhật DS</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="monHocSearchLineEdit">
@@ -233,19 +220,6 @@
      <attribute name="title">
       <string>Sinh viên</string>
      </attribute>
-     <widget class="QPushButton" name="listAllStudentsButton">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>30</y>
-        <width>161</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Xem DSSV</string>
-      </property>
-     </widget>
      <widget class="QLineEdit" name="sinhVienSearchLineEdit">
       <property name="geometry">
        <rect>
@@ -263,20 +237,20 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>170</y>
+        <y>30</y>
         <width>161</width>
         <height>41</height>
        </rect>
       </property>
       <property name="text">
-       <string>Sửa SV</string>
+       <string>Cập nhật SV</string>
       </property>
      </widget>
      <widget class="QPushButton" name="deleteStudentButton">
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>240</y>
+        <y>170</y>
         <width>161</width>
         <height>41</height>
        </rect>
@@ -317,13 +291,13 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>100</y>
+        <y>30</y>
         <width>161</width>
         <height>41</height>
        </rect>
       </property>
       <property name="text">
-       <string>Sửa lớp TC</string>
+       <string>Cập nhật lớp TC</string>
       </property>
      </widget>
      <widget class="QPushButton" name="deleteCreditClassButton">
@@ -340,23 +314,26 @@
       </property>
      </widget>
      <widget class="QPushButton" name="enterScoresButton">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
-        <x>0</x>
-        <y>310</y>
+        <x>190</x>
+        <y>30</y>
         <width>161</width>
         <height>41</height>
        </rect>
       </property>
       <property name="text">
-       <string>Nhập điểm</string>
+       <string>Cập nhật điểm</string>
       </property>
      </widget>
      <widget class="QPushButton" name="addCreditClassButton">
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>30</y>
+        <y>100</y>
         <width>161</width>
         <height>41</height>
        </rect>
@@ -404,19 +381,6 @@
        <string>Xem SV đăng kí</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="printScoresButton">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>450</y>
-        <width>161</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>In điểm</string>
-      </property>
-     </widget>
      <widget class="QPushButton" name="printAvgScoresButton">
       <property name="geometry">
        <rect>
@@ -434,7 +398,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>590</y>
+        <y>450</y>
         <width>161</width>
         <height>41</height>
        </rect>
@@ -453,24 +417,11 @@
        </rect>
       </property>
      </widget>
-     <widget class="QPushButton" name="disableCreditClassButton">
-      <property name="geometry">
-       <rect>
-        <x>190</x>
-        <y>28</y>
-        <width>161</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Hủy lớp TC</string>
-      </property>
-     </widget>
      <widget class="QPushButton" name="printCreditClassButton">
       <property name="geometry">
        <rect>
-        <x>190</x>
-        <y>100</y>
+        <x>0</x>
+        <y>310</y>
         <width>161</width>
         <height>41</height>
        </rect>
